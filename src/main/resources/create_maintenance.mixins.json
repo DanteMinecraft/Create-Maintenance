@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "net.dantemc.create_maintenance.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "DestinationInstructionMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
