@@ -1,2 +1,1 @@
-# Create-Maintenance
-The official repository for the Maintenance addon for the Create mod.
+A mod that adds a Maintenance Block that can deactivate certain Create mechanics for a limited time), for example train stations.
