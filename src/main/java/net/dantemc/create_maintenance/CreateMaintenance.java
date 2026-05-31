@@ -1,7 +1,10 @@
 package net.dantemc.create_maintenance;
 
 import net.dantemc.create_maintenance.marker.MaintenanceMarkerBlock;
+import net.dantemc.create_maintenance.marker.MaintenanceMarkerBlockEntity;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -23,6 +26,8 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.function.Supplier;
+
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(CreateMaintenance.MODID)
 public class CreateMaintenance {
@@ -32,11 +37,22 @@ public class CreateMaintenance {
 
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MODID);
 
     // Maintenance Marker Block
     public static final DeferredBlock<Block> MAINTENANCE_MARKER = BLOCKS.register(
             "maintenance_marker", () -> new MaintenanceMarkerBlock(
                     BlockBehaviour.Properties.of().sound(SoundType.METAL)));
+
+    public static final Supplier<BlockEntityType<MaintenanceMarkerBlockEntity>>
+            MAINTENANCE_MARKER_BE =
+            BLOCK_ENTITY_TYPES.register(
+                    "maintenance_marker",
+                    () -> BlockEntityType.Builder.of(
+                            MaintenanceMarkerBlockEntity::new,
+                            MAINTENANCE_MARKER.get()
+                    ).build(null)
+            );
 
     public static final DeferredItem<BlockItem> MAINTENANCE_MARKER_ITEM = ITEMS.registerSimpleBlockItem(
             "maintenance_marker", MAINTENANCE_MARKER);
@@ -46,6 +62,7 @@ public class CreateMaintenance {
 
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
+        BLOCK_ENTITY_TYPES.register(modEventBus);
 
         NeoForge.EVENT_BUS.register(this);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
