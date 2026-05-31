@@ -1,5 +1,6 @@
 package net.dantemc.create_maintenance;
 
+import net.minecraft.world.level.block.SoundType;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -41,8 +42,13 @@ public class CreateMaintenance {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
 
-    public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBlock("example_block", BlockBehaviour.Properties.of().mapColor(MapColor.STONE));
-    public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("example_block", EXAMPLE_BLOCK);
+    // Maintenance Marker Block
+    public static final DeferredBlock<Block> MAINTENANCE_MARKER = BLOCKS.register(
+            "maintenance_marker", () -> new MaintenanceMarkerBlock(
+                    BlockBehaviour.Properties.of().sound(SoundType.METAL)));
+
+    public static final DeferredItem<BlockItem> MAINTENANCE_MARKER_ITEM = ITEMS.registerSimpleBlockItem(
+            "maintenance_marker", MAINTENANCE_MARKER);
 
     public CreateMaintenance(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
@@ -62,7 +68,7 @@ public class CreateMaintenance {
     // Add the example block item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
-            event.accept(EXAMPLE_BLOCK_ITEM);
+            event.accept(MAINTENANCE_MARKER_ITEM);
         }
     }
 

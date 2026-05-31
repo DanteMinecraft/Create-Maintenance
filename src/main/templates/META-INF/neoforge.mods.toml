@@ -79,12 +79,10 @@ A mod that adds a Maintenance Block that can deactivate certain Create mechanics
     # Side this dependency is applied on - BOTH, CLIENT, or SERVER
     side="BOTH"
 
-# Here's another dependency
 [[dependencies.${mod_id}]]
-    modId="minecraft"
+    modId="create"
     type="required"
-    # This version range declares a minimum of the current minecraft version up to but not including the next major version
-    versionRange="${minecraft_version_range}"
+    versionRange="[6.0.10,6.1.0)"
     ordering="NONE"
     side="BOTH"
 
