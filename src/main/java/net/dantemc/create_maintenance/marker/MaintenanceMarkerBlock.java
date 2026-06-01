@@ -44,7 +44,7 @@ public class MaintenanceMarkerBlock extends Block implements EntityBlock {
         }
 
         OfflineStationManager.setOffline(gs.getId());
-        System.out.println("\nName: " + gs.name + "\nId: " + gs.id + "\nBE Pos: " + gs.blockEntityPos + "\nIs offline?: " + OfflineStationManager.isOffline(gs.getId()));
+        //System.out.println("\nName: " + gs.name + "\nId: " + gs.id + "\nBE Pos: " + gs.blockEntityPos + "\nIs offline?: " + OfflineStationManager.isOffline(gs.getId()));
         System.out.println(OfflineStationManager.OFFLINE_STATIONS);
     }
 
