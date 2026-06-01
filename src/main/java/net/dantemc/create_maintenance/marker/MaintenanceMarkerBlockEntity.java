@@ -12,7 +12,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.slf4j.Logger;
 
 public class MaintenanceMarkerBlockEntity extends BlockEntity {
-    public static final Logger LOGGER = LogUtils.getLogger();
 
     public MaintenanceMarkerBlockEntity(
             BlockPos pos,

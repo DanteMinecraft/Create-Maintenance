@@ -5,6 +5,7 @@ import com.simibubi.create.content.trains.schedule.ScheduleRuntime;
 import com.simibubi.create.content.trains.schedule.destination.DestinationInstruction;
 
 import com.simibubi.create.content.trains.station.GlobalStation;
+import net.dantemc.create_maintenance.CreateMaintenance;
 import net.dantemc.create_maintenance.marker.OfflineStationManager;
 import net.minecraft.world.level.Level;
 import com.simibubi.create.content.trains.graph.EdgePointType;
@@ -38,11 +39,68 @@ public abstract class DestinationInstructionMixin {
         GlobalStation station = (GlobalStation) stationObj;
 
         if (OfflineStationManager.isOffline(station.getId())) {
-            System.out.println("Skipping offline station: " + station.name);
+            CreateMaintenance.LOGGER.info(
+                    "[CM] Rejected station: {}",
+                    station.name
+            );
             return false;
         }
 
-        return validStations.add(station);
+        CreateMaintenance.LOGGER.info(
+                "[CM] Accepted station: {}",
+                station.name
+        );
+
+        boolean result = validStations.add(station);
+
+        CreateMaintenance.LOGGER.info(
+                "[CM] Valid stations count: {}",
+                validStations.size()
+        );
+
+        for (GlobalStation valid : validStations) {
+            CreateMaintenance.LOGGER.info(
+                    "[CM] -> {}",
+                    valid.name
+            );
+        }
+
+        return result;
+
+    }
+
+    @Inject(
+            method = "start",
+            at = @At("RETURN")
+    )
+    private void maintenance$debugResult(
+            ScheduleRuntime runtime,
+            Level level,
+            CallbackInfoReturnable<DiscoveredPath> cir) {
+
+        DiscoveredPath path = cir.getReturnValue();
+
+        if (path == null) {
+            CreateMaintenance.LOGGER.info(
+                    "[CM] PATHFINDING FAILED FOR ENTRY {}",
+                    runtime.currentEntry
+            );
+        } else {
+            CreateMaintenance.LOGGER.info(
+                    "[CM] PATHFINDING SUCCESS FOR ENTRY {}",
+                    runtime.currentEntry
+            );
+        }
+
+        CreateMaintenance.LOGGER.info(
+                "[CM] Train currently at: {}",
+                runtime.train.navigation.destination
+        );
+
+        CreateMaintenance.LOGGER.info(
+                "[CM] Returned path = {}",
+                path
+        );
     }
 
     @Inject(
@@ -54,6 +112,8 @@ public abstract class DestinationInstructionMixin {
             ScheduleRuntime runtime,
             Level level,
             CallbackInfoReturnable<DiscoveredPath> cir) {
+
+        CreateMaintenance.LOGGER.info("[CM] START ENTRY: " + runtime.currentEntry);
 
         String regex = getFilterForRegex();
 
@@ -67,23 +127,41 @@ public abstract class DestinationInstructionMixin {
 
             foundMatch = true;
 
-            System.out.println("Matched station: " + station.name);
+            CreateMaintenance.LOGGER.info("Matched station: " + station.name);
 
             if (!OfflineStationManager.isOffline(station.getId())) {
                 allOffline = false;
             }
         }
 
-        System.out.println("Current entry: " + runtime.currentEntry);
-        System.out.println("Regex: " + regex);
-        System.out.println("Found match: " + foundMatch);
-        System.out.println("All offline: " + allOffline);
+        CreateMaintenance.LOGGER.info("Current entry: " + runtime.currentEntry);
+        CreateMaintenance.LOGGER.info("Regex: " + regex);
+        CreateMaintenance.LOGGER.info("Found match: " + foundMatch);
+        CreateMaintenance.LOGGER.info("All offline: " + allOffline);
 
         if (foundMatch && allOffline) {
-            System.out.println("SKIPPING ENTRY");
-            runtime.currentEntry++;
-            cir.setReturnValue(null);
 
+            CreateMaintenance.LOGGER.info(
+                    "[CM] SKIPPING ENTRY {}",
+                    runtime.currentEntry
+            );
+
+            CreateMaintenance.LOGGER.info(
+                    "[CM] Schedule size: {}",
+                    runtime.schedule.entries.size()
+            );
+
+            runtime.currentEntry =
+                    (runtime.currentEntry + 1)
+                            % runtime.schedule.entries.size();
+
+            CreateMaintenance.LOGGER.info(
+                    "[CM] NEW ENTRY {}",
+                    runtime.currentEntry
+            );
+
+            cir.setReturnValue(null);
+            cir.cancel();
         }
     }
 }
