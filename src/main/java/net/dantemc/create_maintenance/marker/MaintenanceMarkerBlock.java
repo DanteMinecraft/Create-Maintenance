@@ -4,6 +4,8 @@ import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -77,4 +79,20 @@ public class MaintenanceMarkerBlock extends Block implements EntityBlock {
                 state
         );
     }
+
+    @Override
+    protected void tick(
+            BlockState state,
+            ServerLevel level,
+            BlockPos pos,
+            RandomSource random) {
+
+        BlockEntity be = level.getBlockEntity(pos);
+
+        if (be instanceof MaintenanceMarkerBlockEntity marker) {
+            marker.registerStation();
+        }
+    }
+
+
 }
