@@ -1,11 +1,8 @@
 {
-  "block.create_maintenance.maintenance_marker": "Maintenance Marker",
+  "block.create_maintenance.maintenance_box": "Maintenance Box",
 
   "create_maintenance.configuration.title": "Create: Maintenance Configs",
   "create_maintenance.configuration.section.create_maintenance.common.toml": "Create: Maintenance Configs",
   "create_maintenance.configuration.section.create_maintenance.common.toml.title": "Create: Maintenance Configs",
-  "create_maintenance.configuration.items": "Item List",
-  "create_maintenance.configuration.logDirtBlock": "Log Dirt Block",
-  "create_maintenance.configuration.magicNumberIntroduction": "Magic Number Text",
-  "create_maintenance.configuration.magicNumber": "Magic Number"
+  "create_maintenance.configuration.debugLogs": "Enable debug logs"
 }

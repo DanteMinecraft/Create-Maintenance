@@ -40,22 +40,22 @@ public class CreateMaintenance {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MODID);
 
     // Maintenance Marker Block
-    public static final DeferredBlock<Block> MAINTENANCE_MARKER = BLOCKS.register(
-            "maintenance_marker", () -> new MaintenanceMarkerBlock(
+    public static final DeferredBlock<Block> MAINTENANCE_BOX = BLOCKS.register(
+            "maintenance_box", () -> new MaintenanceMarkerBlock(
                     BlockBehaviour.Properties.of().sound(SoundType.METAL)));
 
     public static final Supplier<BlockEntityType<MaintenanceMarkerBlockEntity>>
-            MAINTENANCE_MARKER_BE =
+            MAINTENANCE_BOX_BE =
             BLOCK_ENTITY_TYPES.register(
-                    "maintenance_marker",
+                    "maintenance_box",
                     () -> BlockEntityType.Builder.of(
                             MaintenanceMarkerBlockEntity::new,
-                            MAINTENANCE_MARKER.get()
+                            MAINTENANCE_BOX.get()
                     ).build(null)
             );
 
-    public static final DeferredItem<BlockItem> MAINTENANCE_MARKER_ITEM = ITEMS.registerSimpleBlockItem(
-            "maintenance_marker", MAINTENANCE_MARKER);
+    public static final DeferredItem<BlockItem> MAINTENANCE_BOX_ITEM = ITEMS.registerSimpleBlockItem(
+            "maintenance_box", MAINTENANCE_BOX);
 
     public CreateMaintenance(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
@@ -70,20 +70,24 @@ public class CreateMaintenance {
         modEventBus.addListener(this::addCreative);
     }
 
-    private void commonSetup(FMLCommonSetupEvent event) {
-    }
-
-    // Add the example block item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
-            event.accept(MAINTENANCE_MARKER_ITEM);
+            event.accept(MAINTENANCE_BOX_ITEM);
         }
     }
 
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
+    //helper method for loggers
+    public static void debug(String message, Object... args) {
+        if (Config.WRITE_DEBUG_LOGS.get()) {
+            LOGGER.info("[CM] " + message, args);
+        }
+    }
+
+    private void commonSetup(FMLCommonSetupEvent event) {
+    }
+
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
-        // Do something when the server starts
-        LOGGER.info("HELLO from server starting");
+        CreateMaintenance.debug("Create: Maintenance has been initiated on the server");
     }
 }

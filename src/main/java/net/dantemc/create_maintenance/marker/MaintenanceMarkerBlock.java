@@ -2,18 +2,18 @@ package net.dantemc.create_maintenance.marker;
 
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
+import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class MaintenanceMarkerBlock extends Block implements EntityBlock {
+public class MaintenanceMarkerBlock extends WrenchableDirectionalBlock implements EntityBlock {
 
     public MaintenanceMarkerBlock(Properties properties) {
         super(properties);

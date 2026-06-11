@@ -39,28 +39,28 @@ public abstract class DestinationInstructionMixin {
         GlobalStation station = (GlobalStation) stationObj;
 
         if (OfflineStationManager.isOffline(station.getId())) {
-            CreateMaintenance.LOGGER.info(
-                    "[CM] Rejected station: {}",
+            CreateMaintenance.debug(
+                    "Rejected station: {}",
                     station.name
             );
             return false;
         }
 
-        CreateMaintenance.LOGGER.info(
-                "[CM] Accepted station: {}",
+        CreateMaintenance.debug(
+                "Accepted station: {}",
                 station.name
         );
 
         boolean result = validStations.add(station);
 
-        CreateMaintenance.LOGGER.info(
-                "[CM] Valid stations count: {}",
+        CreateMaintenance.debug(
+                "Valid stations count: {}",
                 validStations.size()
         );
 
         for (GlobalStation valid : validStations) {
-            CreateMaintenance.LOGGER.info(
-                    "[CM] -> {}",
+            CreateMaintenance.debug(
+                    "-> {}",
                     valid.name
             );
         }
@@ -81,24 +81,31 @@ public abstract class DestinationInstructionMixin {
         DiscoveredPath path = cir.getReturnValue();
 
         if (path == null) {
-            CreateMaintenance.LOGGER.info(
-                    "[CM] PATHFINDING FAILED FOR ENTRY {}",
+            CreateMaintenance.debug(
+                    "PATHFINDING FAILED FOR ENTRY {}",
                     runtime.currentEntry
             );
         } else {
-            CreateMaintenance.LOGGER.info(
-                    "[CM] PATHFINDING SUCCESS FOR ENTRY {}",
+            CreateMaintenance.debug(
+                    "PATHFINDING SUCCESS FOR ENTRY {}",
                     runtime.currentEntry
             );
         }
 
-        CreateMaintenance.LOGGER.info(
-                "[CM] Train currently at: {}",
+        CreateMaintenance.debug(
+                "Current navigation destination: {}",
+                runtime.train.navigation.destination == null
+                        ? "null"
+                        : runtime.train.navigation.destination.name
+        );
+
+        CreateMaintenance.debug(
+                "Train currently at: {}",
                 runtime.train.navigation.destination
         );
 
-        CreateMaintenance.LOGGER.info(
-                "[CM] Returned path = {}",
+        CreateMaintenance.debug(
+                "Returned path = {}",
                 path
         );
     }
@@ -113,7 +120,7 @@ public abstract class DestinationInstructionMixin {
             Level level,
             CallbackInfoReturnable<DiscoveredPath> cir) {
 
-        CreateMaintenance.LOGGER.info("[CM] START ENTRY: " + runtime.currentEntry);
+        CreateMaintenance.debug("START ENTRY: " + runtime.currentEntry);
 
         String regex = getFilterForRegex();
 
@@ -127,27 +134,27 @@ public abstract class DestinationInstructionMixin {
 
             foundMatch = true;
 
-            CreateMaintenance.LOGGER.info("Matched station: " + station.name);
+            CreateMaintenance.debug("Matched station: " + station.name);
 
             if (!OfflineStationManager.isOffline(station.getId())) {
                 allOffline = false;
             }
         }
 
-        CreateMaintenance.LOGGER.info("Current entry: " + runtime.currentEntry);
-        CreateMaintenance.LOGGER.info("Regex: " + regex);
-        CreateMaintenance.LOGGER.info("Found match: " + foundMatch);
-        CreateMaintenance.LOGGER.info("All offline: " + allOffline);
+        CreateMaintenance.debug("Current entry: " + runtime.currentEntry);
+        CreateMaintenance.debug("Regex: " + regex);
+        CreateMaintenance.debug("Found match: " + foundMatch);
+        CreateMaintenance.debug("All offline: " + allOffline);
 
         if (foundMatch && allOffline) {
 
-            CreateMaintenance.LOGGER.info(
-                    "[CM] SKIPPING ENTRY {}",
+            CreateMaintenance.debug(
+                    "SKIPPING ENTRY {}",
                     runtime.currentEntry
             );
 
-            CreateMaintenance.LOGGER.info(
-                    "[CM] Schedule size: {}",
+            CreateMaintenance.debug(
+                    "Schedule size: {}",
                     runtime.schedule.entries.size()
             );
 
@@ -155,8 +162,8 @@ public abstract class DestinationInstructionMixin {
                     (runtime.currentEntry + 1)
                             % runtime.schedule.entries.size();
 
-            CreateMaintenance.LOGGER.info(
-                    "[CM] NEW ENTRY {}",
+            CreateMaintenance.debug(
+                    "NEW ENTRY {}",
                     runtime.currentEntry
             );
 
