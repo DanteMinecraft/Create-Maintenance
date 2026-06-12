@@ -1,18 +1,17 @@
 package net.dantemc.create_maintenance.maintenance_box;
 
 import com.simibubi.create.content.trains.station.GlobalStation;
-import com.simibubi.create.content.trains.station.StationBlockEntity;
 import net.dantemc.create_maintenance.CreateMaintenance;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class MaintenanceBoxBlockEntity extends BlockEntity {
 
-    public MaintenanceBoxBlockEntity(BlockPos pos, BlockState state) {
-        super(CreateMaintenance.MAINTENANCE_BOX_BE.get(), pos, state);
+    public MaintenanceBoxBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
 
     public void registerStation() {
