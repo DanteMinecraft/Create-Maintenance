@@ -1,8 +1,10 @@
 package net.dantemc.create_maintenance;
 
-import net.dantemc.create_maintenance.marker.MaintenanceMarkerBlock;
-import net.dantemc.create_maintenance.marker.MaintenanceMarkerBlockEntity;
+import com.simibubi.create.AllCreativeModeTabs;
+import net.dantemc.create_maintenance.maintenance_box.MaintenanceBoxBlock;
+import net.dantemc.create_maintenance.maintenance_box.MaintenanceBoxBlockEntity;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.slf4j.Logger;
@@ -41,21 +43,21 @@ public class CreateMaintenance {
 
     // Maintenance Marker Block
     public static final DeferredBlock<Block> MAINTENANCE_BOX = BLOCKS.register(
-            "maintenance_box", () -> new MaintenanceMarkerBlock(
+            "maintenance_box", () -> new MaintenanceBoxBlock(
                     BlockBehaviour.Properties.of().sound(SoundType.METAL)));
 
-    public static final Supplier<BlockEntityType<MaintenanceMarkerBlockEntity>>
+    public static final Supplier<BlockEntityType<MaintenanceBoxBlockEntity>>
             MAINTENANCE_BOX_BE =
             BLOCK_ENTITY_TYPES.register(
                     "maintenance_box",
                     () -> BlockEntityType.Builder.of(
-                            MaintenanceMarkerBlockEntity::new,
+                            MaintenanceBoxBlockEntity::new,
                             MAINTENANCE_BOX.get()
                     ).build(null)
             );
 
-    public static final DeferredItem<BlockItem> MAINTENANCE_BOX_ITEM = ITEMS.registerSimpleBlockItem(
-            "maintenance_box", MAINTENANCE_BOX);
+    public static final DeferredItem<BlockItem> MAINTENANCE_BOX_ITEM = ITEMS.register(
+            "maintenance_box", () -> new IgnorePlacingRulesItem(MAINTENANCE_BOX.get(),new Item.Properties()));
 
     public CreateMaintenance(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
@@ -71,7 +73,7 @@ public class CreateMaintenance {
     }
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+        if (event.getTabKey() == AllCreativeModeTabs.BASE_CREATIVE_TAB.getKey()) {
             event.accept(MAINTENANCE_BOX_ITEM);
         }
     }
