@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#",
+    "A"
+  ],
+  "key": {
+    "#": {
+      "item": "create:brass_sheet"
+    },
+    "A": {
+      "item": "create:andesite_casing"
+    }
+  },
+  "result": {
+    "id": "create_maintenance:maintenance_box"
+  }
+}
