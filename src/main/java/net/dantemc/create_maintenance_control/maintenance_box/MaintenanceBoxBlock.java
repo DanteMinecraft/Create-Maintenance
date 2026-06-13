@@ -84,7 +84,7 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
     }
 
     @Override
-    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
 
         BlockEntity be = level.getBlockEntity(pos);
 

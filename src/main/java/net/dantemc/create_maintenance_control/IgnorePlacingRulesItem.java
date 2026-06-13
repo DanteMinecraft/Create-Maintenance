@@ -3,10 +3,10 @@ package net.dantemc.create_maintenance_control;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.util.TriState;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.Event;
 
 @EventBusSubscriber
 public class IgnorePlacingRulesItem extends BlockItem {
@@ -23,6 +23,6 @@ public class IgnorePlacingRulesItem extends BlockItem {
         if (!(stack.getItem() instanceof IgnorePlacingRulesItem))
             return;
 
-        event.setUseBlock(TriState.FALSE);
+        event.setUseBlock(Event.Result.DENY);
     }
 }
