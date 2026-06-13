@@ -22,25 +22,6 @@ import java.util.ArrayList;
 @Mixin(DestinationInstruction.class)
 public abstract class DestinationInstructionMixin {
 
-    /**/
-    static {
-        CreateMaintenance.LOGGER.info("DestinationInstructionMixin loaded!");
-    }
-
-    @Inject(
-            method = "start",
-            at = @At("HEAD"),
-            remap = false
-    )
-    private void maintenance$test(
-            ScheduleRuntime runtime,
-            Level level,
-            CallbackInfoReturnable<DiscoveredPath> cir) {
-
-        CreateMaintenance.LOGGER.info("START METHOD CALLED");
-    }
-    /**/
-
     @Shadow
     public abstract String getFilterForRegex();
 
