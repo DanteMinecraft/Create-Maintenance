@@ -9,7 +9,7 @@ public class Config {
 
     public static final ForgeConfigSpec.BooleanValue WRITE_DEBUG_LOGS = BUILDER
             .comment("Enable debug logging for Create: Maintenance Control")
-            .define("debugLogs", false);
+            .define("debugLogs", true);
 
     static final ForgeConfigSpec SPEC = BUILDER.build();
 

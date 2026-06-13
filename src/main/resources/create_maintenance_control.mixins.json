@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "net.dantemc.create_maintenance_control.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_17",
   "mixins": [
     "DestinationInstructionMixin"
   ],

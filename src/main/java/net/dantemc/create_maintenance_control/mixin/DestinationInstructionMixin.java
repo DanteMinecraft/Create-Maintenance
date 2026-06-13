@@ -22,6 +22,25 @@ import java.util.ArrayList;
 @Mixin(DestinationInstruction.class)
 public abstract class DestinationInstructionMixin {
 
+    /**/
+    static {
+        CreateMaintenance.LOGGER.info("DestinationInstructionMixin loaded!");
+    }
+
+    @Inject(
+            method = "start",
+            at = @At("HEAD"),
+            remap = false
+    )
+    private void maintenance$test(
+            ScheduleRuntime runtime,
+            Level level,
+            CallbackInfoReturnable<DiscoveredPath> cir) {
+
+        CreateMaintenance.LOGGER.info("START METHOD CALLED");
+    }
+    /**/
+
     @Shadow
     public abstract String getFilterForRegex();
 
@@ -30,8 +49,10 @@ public abstract class DestinationInstructionMixin {
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/util/ArrayList;add(Ljava/lang/Object;)Z"
-            )
+            ),
+            remap = false
     )
+
     private boolean maintenance$filterOfflineStations(
             ArrayList<GlobalStation> validStations,
             Object stationObj) {
@@ -71,7 +92,8 @@ public abstract class DestinationInstructionMixin {
 
     @Inject(
             method = "start",
-            at = @At("RETURN")
+            at = @At("RETURN"),
+            remap = false
     )
     private void maintenance$debugResult(
             ScheduleRuntime runtime,
@@ -113,6 +135,7 @@ public abstract class DestinationInstructionMixin {
     @Inject(
             method = "start",
             at = @At("HEAD"),
+            remap = false,
             cancellable = true
     )
     private void maintenance$checkForOfflineDestination(
