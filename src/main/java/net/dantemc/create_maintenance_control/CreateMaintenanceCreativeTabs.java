@@ -1,4 +1,4 @@
-package net.dantemc.create_maintenance;
+package net.dantemc.create_maintenance_control;
 
 import com.simibubi.create.AllCreativeModeTabs;
 import net.minecraft.core.registries.Registries;
@@ -16,7 +16,7 @@ public class CreateMaintenanceCreativeTabs {
     private static final DeferredHolder<CreativeModeTab, CreativeModeTab> BASE_TAB =
             CREATIVE_TABS.register("main", () ->
                     CreativeModeTab.builder()
-                            .title(Component.translatable("itemGroup.create_maintenance"))
+                            .title(Component.translatable("itemGroup.create_maintenance_control"))
                             .icon(() -> new ItemStack(CreateMaintenance.MAINTENANCE_BOX.asItem()))
                             .withTabsBefore(AllCreativeModeTabs.PALETTES_CREATIVE_TAB.getKey())
                             .build());

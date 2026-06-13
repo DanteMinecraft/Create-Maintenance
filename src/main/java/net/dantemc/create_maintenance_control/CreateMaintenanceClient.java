@@ -1,4 +1,4 @@
-package net.dantemc.create_maintenance;
+package net.dantemc.create_maintenance_control;
 
 import net.createmod.catnip.config.ui.BaseConfigScreen;
 import net.minecraft.client.Minecraft;
@@ -21,9 +21,6 @@ import java.util.function.Supplier;
 @EventBusSubscriber(modid = CreateMaintenance.MODID, value = Dist.CLIENT)
 public class CreateMaintenanceClient {
     public CreateMaintenanceClient(ModContainer container) {
-        // Allows NeoForge to create a config screen for this mod's configs.
-        // The config screen is accessed by going to the Mods screen > clicking on your mod > clicking on config.
-        // Do not forget to add translations for your config options to the en_us.json file.
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }
 

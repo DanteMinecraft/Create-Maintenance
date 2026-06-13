@@ -46,7 +46,7 @@ authors="DanteMC"
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-Create: Maintenance is a small addon for the Create mod that introduces maintenance mechanics to your train networks.
+Create: Maintenance Control is a small addon for the Create mod that introduces maintenance mechanics to your train networks.
 '''
 
 # The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.

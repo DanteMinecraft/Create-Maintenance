@@ -1,4 +1,4 @@
-package net.dantemc.create_maintenance.maintenance_box;
+package net.dantemc.create_maintenance_control.maintenance_box;
 
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.content.trains.station.StationBlockEntity;

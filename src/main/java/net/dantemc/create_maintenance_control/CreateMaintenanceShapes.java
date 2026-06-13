@@ -1,4 +1,4 @@
-package net.dantemc.create_maintenance;
+package net.dantemc.create_maintenance_control;
 
 import net.createmod.catnip.math.VoxelShaper;
 import net.minecraft.core.Direction;

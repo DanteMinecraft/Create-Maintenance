@@ -1,12 +1,12 @@
-package net.dantemc.create_maintenance.mixin;
+package net.dantemc.create_maintenance_control.mixin;
 
 import com.simibubi.create.content.trains.graph.DiscoveredPath;
 import com.simibubi.create.content.trains.schedule.ScheduleRuntime;
 import com.simibubi.create.content.trains.schedule.destination.DestinationInstruction;
 
 import com.simibubi.create.content.trains.station.GlobalStation;
-import net.dantemc.create_maintenance.CreateMaintenance;
-import net.dantemc.create_maintenance.maintenance_box.OfflineStationManager;
+import net.dantemc.create_maintenance_control.CreateMaintenance;
+import net.dantemc.create_maintenance_control.maintenance_box.OfflineStationManager;
 import net.minecraft.world.level.Level;
 import com.simibubi.create.content.trains.graph.EdgePointType;
 

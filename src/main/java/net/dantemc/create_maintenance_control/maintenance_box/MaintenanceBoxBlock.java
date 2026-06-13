@@ -1,11 +1,11 @@
-package net.dantemc.create_maintenance.maintenance_box;
+package net.dantemc.create_maintenance_control.maintenance_box;
 
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
-import net.dantemc.create_maintenance.CreateMaintenanceShapes;
+import net.dantemc.create_maintenance_control.CreateMaintenance;
+import net.dantemc.create_maintenance_control.CreateMaintenanceShapes;
 import net.minecraft.core.BlockPos;
-import net.dantemc.create_maintenance.CreateMaintenance;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -30,7 +30,7 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
         if (level.isClientSide)
             return;
 
-        CreateMaintenance.debug("Marker placed");
+        CreateMaintenance.debug("Maintenance Box placed");
         GlobalStation gs = StationUtils.findNearbyStation(level, pos);
 
         if (gs == null) {
@@ -50,7 +50,7 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
         if (level.isClientSide)
             return;
 
-        CreateMaintenance.debug("Marker removed");
+        CreateMaintenance.debug("Maintenance Box removed");
         GlobalStation gs = StationUtils.findNearbyStation(level, pos);
 
         if (gs == null) {

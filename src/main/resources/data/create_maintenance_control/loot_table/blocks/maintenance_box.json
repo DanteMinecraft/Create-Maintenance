@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "create_maintenance:maintenance_box"
+          "name": "create_maintenance_control:maintenance_box"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "create_maintenance:blocks/maintenance_box"
+  "random_sequence": "create_maintenance_control:blocks/maintenance_box"
 }

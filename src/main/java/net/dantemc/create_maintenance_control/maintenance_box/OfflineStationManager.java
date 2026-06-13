@@ -1,4 +1,4 @@
-package net.dantemc.create_maintenance.maintenance_box;
+package net.dantemc.create_maintenance_control.maintenance_box;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package net.dantemc.create_maintenance;
+package net.dantemc.create_maintenance_control;
 
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
