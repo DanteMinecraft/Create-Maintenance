@@ -6,14 +6,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 
 public class CreateMaintenanceCreativeTabs {
-    public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS =
-            DeferredRegister.create(Registries.CREATIVE_MODE_TAB, CreateMaintenance.MODID);
 
-    private static final DeferredHolder<CreativeModeTab, CreativeModeTab> BASE_TAB =
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS =
+            DeferredRegister.create(Registries.CREATIVE_MODE_TAB,
+                    CreateMaintenance.MODID);
+
+    private static final RegistryObject<CreativeModeTab> BASE_TAB =
             CREATIVE_TABS.register("main", () ->
                     CreativeModeTab.builder()
                             .title(Component.translatable("itemGroup.create_maintenance_control"))
@@ -24,5 +26,4 @@ public class CreateMaintenanceCreativeTabs {
     public static ResourceKey<CreativeModeTab> getBaseTab() {
         return BASE_TAB.getKey();
     }
-
 }
