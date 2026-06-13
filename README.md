@@ -1,7 +1,7 @@
-# 🛠️ Create: Maintenance ⚠️
+# 🛠️ Create: Maintenance Control ⚠️
 ![Modrinth](https://github.com/user-attachments/assets/ba69b03d-1f09-458c-9429-817854d7793a)
 
-Create: Maintenance is a small addon for Create that introduces maintenance mechanics to your train networks.
+Create: Maintenance Control is a small addon for Create that introduces maintenance mechanics to your train networks.
 
 ## ⬇️ Download the mod
 _Download links will be available once the mod is released_
