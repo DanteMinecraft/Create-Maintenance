@@ -30,10 +30,27 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
         registerDefaultState(defaultBlockState().setValue(POWERED, false));
     }
 
+
+
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(POWERED);
         super.createBlockStateDefinition(builder);
+    }
+
+    @Override
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean moving) {
+
+        if (level.isClientSide)
+            return;
+
+        boolean powered = level.hasNeighborSignal(pos);
+
+        if (powered != state.getValue(POWERED)) {
+            level.setBlock(pos,
+                    state.setValue(POWERED, powered),
+                    Block.UPDATE_ALL);
+        }
     }
 
     @Override
@@ -52,7 +69,6 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
         }
 
         OfflineStationManager.setOffline(gs.getId());
-        //System.out.println("\nName: " + gs.name + "\nId: " + gs.id + "\nBE Pos: " + gs.blockEntityPos + "\nIs offline?: " + OfflineStationManager.isOffline(gs.getId()));
         System.out.println(OfflineStationManager.OFFLINE_STATIONS);
     }
 
@@ -70,6 +86,7 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
             System.out.println(OfflineStationManager.OFFLINE_STATIONS);
             return;
         }
+
 
         OfflineStationManager.setOnline(gs.getId());
         System.out.println(OfflineStationManager.OFFLINE_STATIONS);

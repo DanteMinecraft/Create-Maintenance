@@ -1,28 +1,55 @@
 {
   "variants": {
-    "facing=down": {
+    "facing=down,powered=false": {
       "model": "create_maintenance_control:block/maintenance_box",
       "x": 180
     },
-    "facing=east": {
+    "facing=east,powered=false": {
       "model": "create_maintenance_control:block/maintenance_box",
       "x": 90,
       "y": 90
     },
-    "facing=north": {
+    "facing=north,powered=false": {
       "model": "create_maintenance_control:block/maintenance_box",
       "x": 90
     },
-    "facing=south": {
+    "facing=south,powered=false": {
       "model": "create_maintenance_control:block/maintenance_box",
       "x": 90,
       "y": 180
     },
-    "facing=up": {
+    "facing=up,powered=false": {
       "model": "create_maintenance_control:block/maintenance_box"
     },
-    "facing=west": {
+    "facing=west,powered=false": {
       "model": "create_maintenance_control:block/maintenance_box",
+      "x": 90,
+      "y": 270
+    },
+
+    "facing=down,powered=true": {
+      "model": "create_maintenance_control:block/maintenance_box_powered",
+      "x": 180
+    },
+    "facing=east,powered=true": {
+      "model": "create_maintenance_control:block/maintenance_box_powered",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north,powered=true": {
+      "model": "create_maintenance_control:block/maintenance_box_powered",
+      "x": 90
+    },
+    "facing=south,powered=true": {
+      "model": "create_maintenance_control:block/maintenance_box_powered",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up,powered=true": {
+      "model": "create_maintenance_control:block/maintenance_box_powered"
+    },
+    "facing=west,powered=true": {
+      "model": "create_maintenance_control:block/maintenance_box_powered",
       "x": 90,
       "y": 270
     }

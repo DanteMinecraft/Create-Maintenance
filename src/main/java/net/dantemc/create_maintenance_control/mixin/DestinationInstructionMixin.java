@@ -34,15 +34,11 @@ public abstract class DestinationInstructionMixin {
     )
     private boolean maintenance$filterOfflineStations(
             ArrayList<GlobalStation> validStations,
-            Object stationObj) {
+            Object stationObj, ScheduleRuntime runtime, Level level) {
 
         GlobalStation station = (GlobalStation) stationObj;
 
-        if (OfflineStationManager.isOffline(station.getId())) {
-            CreateMaintenance.debug(
-                    "Rejected station: {}",
-                    station.name
-            );
+        if (OfflineStationManager.shouldSkip(level, station)) {
             return false;
         }
 
@@ -136,7 +132,7 @@ public abstract class DestinationInstructionMixin {
 
             CreateMaintenance.debug("Matched station: " + station.name);
 
-            if (!OfflineStationManager.isOffline(station.getId())) {
+            if (!OfflineStationManager.shouldSkip(level, station)) {
                 allOffline = false;
             }
         }

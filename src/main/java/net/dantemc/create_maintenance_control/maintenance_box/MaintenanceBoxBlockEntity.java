@@ -7,6 +7,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 public class MaintenanceBoxBlockEntity extends BlockEntity {
 
@@ -35,22 +36,6 @@ public class MaintenanceBoxBlockEntity extends BlockEntity {
 
         OfflineStationManager.setOffline(gs.getId());
     }
-
-    /*public void unregisterStation() {
-        Level level = getLevel();
-
-        if (level == null) {
-            return;
-        }
-
-        GlobalStation gs = findNearbyStation(getLevel(), getBlockPos());
-
-        if (gs == null) {
-            return;
-        }
-
-        OfflineStationManager.setOnline(gs.getId());
-    }*/
 
     @Override
     public void onLoad() {
