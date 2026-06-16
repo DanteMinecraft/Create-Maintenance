@@ -7,11 +7,15 @@
     },
     "X": {
       "item": "create:brass_sheet"
+    },
+    "H": {
+      "item": "create:electron_tube"
     }
   },
   "pattern": [
-    "X",
-    "#"
+    "H",
+    "#",
+    "X"
   ],
   "result": {
     "count": 1,
