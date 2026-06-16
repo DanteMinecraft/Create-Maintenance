@@ -1,18 +1,24 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "#",
-    "A"
-  ],
+  "category": "misc",
   "key": {
     "#": {
+      "item": "create:andesite_casing"
+    },
+    "X": {
       "item": "create:brass_sheet"
     },
-    "A": {
-      "item": "create:andesite_casing"
+    "H": {
+      "item": "create:electron_tube"
     }
   },
+  "pattern": [
+    "H",
+    "#",
+    "X"
+  ],
   "result": {
-    "id": "create_maintenance_control:maintenance_box"
+    "count": 1,
+    "item": "create_maintenance_control:maintenance_box"
   }
 }

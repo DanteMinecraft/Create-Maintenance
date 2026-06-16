@@ -30,8 +30,6 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
         registerDefaultState(defaultBlockState().setValue(POWERED, false));
     }
 
-
-
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(POWERED);
@@ -86,7 +84,6 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
             System.out.println(OfflineStationManager.OFFLINE_STATIONS);
             return;
         }
-
 
         OfflineStationManager.setOnline(gs.getId());
         System.out.println(OfflineStationManager.OFFLINE_STATIONS);
