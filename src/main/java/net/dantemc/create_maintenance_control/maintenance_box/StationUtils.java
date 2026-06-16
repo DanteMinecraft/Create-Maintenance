@@ -19,4 +19,18 @@ public class StationUtils {
         }
         return null;
     }
+
+    public static BlockPos findNearbyMaintenanceBox(Level level, GlobalStation station) {
+
+        BlockPos stationPos = station.blockEntityPos;
+
+        for (Direction dir : Direction.values()) {
+            BlockPos pos = stationPos.relative(dir);
+
+            if (level.getBlockState(pos).getBlock() instanceof MaintenanceBoxBlock) {
+                return pos;
+            }
+        }
+        return null;
+    }
 }

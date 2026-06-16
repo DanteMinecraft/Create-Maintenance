@@ -1,7 +1,7 @@
 {
 	"format_version": "1.20.1",
 	"textures": {
-		"0": "create_maintenance_control:block/maintenance_box",
+		"0": "create_maintenance_control:block/maintenance_box_powered",
 		"particle": "create:block/andesite_block"
 	},
 	"elements": [

@@ -11,16 +11,44 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements IBE<MaintenanceBoxBlockEntity> {
 
+    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+
     public MaintenanceBoxBlock(Properties properties) {
         super(properties);
+        registerDefaultState(defaultBlockState().setValue(POWERED, false));
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(POWERED);
+        super.createBlockStateDefinition(builder);
+    }
+
+    @Override
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean moving) {
+
+        if (level.isClientSide)
+            return;
+
+        boolean powered = level.hasNeighborSignal(pos);
+
+        if (powered != state.getValue(POWERED)) {
+            level.setBlock(pos,
+                    state.setValue(POWERED, powered),
+                    Block.UPDATE_ALL);
+        }
     }
 
     @Override
@@ -39,7 +67,6 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
         }
 
         OfflineStationManager.setOffline(gs.getId());
-        //System.out.println("\nName: " + gs.name + "\nId: " + gs.id + "\nBE Pos: " + gs.blockEntityPos + "\nIs offline?: " + OfflineStationManager.isOffline(gs.getId()));
         System.out.println(OfflineStationManager.OFFLINE_STATIONS);
     }
 

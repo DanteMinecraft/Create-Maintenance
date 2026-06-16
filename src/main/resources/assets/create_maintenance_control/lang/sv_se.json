@@ -2,9 +2,11 @@
   "itemGroup.create_maintenance_control": "Create: Maintenance Control",
 
   "block.create_maintenance_control.maintenance_box": "Underhållsblock",
-  "block.create_maintenance_control.maintenance_box.tooltip.summary": "Detta block kan markera _Tågstationer_ som under underhåll.",
-  "block.create_maintenance_control.maintenance_box.tooltip.condition1": "När det placeras bredvid en Tågstation",
-  "block.create_maintenance_control.maintenance_box.tooltip.behaviour1": "Tåg som har denna station _i sina tidtabeller_ kommer att _hoppa över den_ medan underhållet pågår.",
+  "block.create_maintenance_control.maintenance_box.tooltip.summary": "Detta block kan markera _tågstationer_ som under underhåll.",
+  "block.create_maintenance_control.maintenance_box.tooltip.condition1": "När det placeras bredvid en tågstation",
+  "block.create_maintenance_control.maintenance_box.tooltip.condition2": "När det får en redstonesignal",
+  "block.create_maintenance_control.maintenance_box.tooltip.behaviour1": "Tåg som har denna station _i sina scheman_ kommer att _hoppa över den_ medan underhållet pågår.",
+  "block.create_maintenance_control.maintenance_box.tooltip.behaviour2": "När blocket _får en redstonesignal_ kommer tåg att _stanna vid stationen_ som vanligt.",
 
   "create_maintenance_control.configuration.title": "Create: Maintenance Control-konfigurationer",
   "create_maintenance_control.configuration.section.create_maintenance_control.common.toml": "Create: Maintenance Control-konfigurationer",

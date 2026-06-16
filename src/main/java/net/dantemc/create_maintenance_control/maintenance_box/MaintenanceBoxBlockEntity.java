@@ -36,22 +36,6 @@ public class MaintenanceBoxBlockEntity extends BlockEntity {
         OfflineStationManager.setOffline(gs.getId());
     }
 
-    /*public void unregisterStation() {
-        Level level = getLevel();
-
-        if (level == null) {
-            return;
-        }
-
-        GlobalStation gs = findNearbyStation(getLevel(), getBlockPos());
-
-        if (gs == null) {
-            return;
-        }
-
-        OfflineStationManager.setOnline(gs.getId());
-    }*/
-
     @Override
     public void onLoad() {
         super.onLoad();
@@ -68,13 +52,5 @@ public class MaintenanceBoxBlockEntity extends BlockEntity {
                 getBlockState().getBlock(),
                 100
         );
-    }
-
-    @Override
-    public void setRemoved() {
-        super.setRemoved();
-
-        //unregisterStation();
-        CreateMaintenance.debug("MAINTENANCE MARKER UNREGISTERED STATION (DOES NOT WORK YET DUE TO UNCOMMENTED unregisterStation();");
     }
 }
