@@ -19,6 +19,6 @@
   ],
   "result": {
     "count": 1,
-    "item": "create_maintenance_control:maintenance_box"
+    "id": "create_maintenance_control:maintenance_box"
   }
 }
