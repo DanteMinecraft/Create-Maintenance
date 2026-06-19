@@ -4,7 +4,8 @@
 Create: Maintenance Control is a small addon for Create that introduces maintenance mechanics to your train networks.
 
 ## ⬇️ Download the mod
-_Download links will be available once the mod is released_
+- Download from Modrinth [here](https://modrinth.com/mod/create-maintenance-control)
+- Download from CurseForge [here](https://www.curseforge.com/minecraft/mc-mods/create-maintenance-control)
 
 ## 🛠️ Dependencies
 - This mod requires [Create](https://modrinth.com/mod/create)
