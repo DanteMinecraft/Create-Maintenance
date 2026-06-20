@@ -6,7 +6,7 @@ import com.simibubi.create.content.trains.schedule.destination.DestinationInstru
 
 import com.simibubi.create.content.trains.station.GlobalStation;
 import net.dantemc.create_maintenance_control.CreateMaintenance;
-import net.dantemc.create_maintenance_control.maintenance_box.OfflineStationManager;
+import net.dantemc.create_maintenance_control.railway.OfflineStationManager;
 import net.minecraft.world.level.Level;
 import com.simibubi.create.content.trains.graph.EdgePointType;
 

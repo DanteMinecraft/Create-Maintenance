@@ -6,8 +6,9 @@ import com.simibubi.create.foundation.item.ItemDescription;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.createmod.catnip.lang.FontHelper;
-import net.dantemc.create_maintenance_control.maintenance_box.MaintenanceBoxBlock;
-import net.dantemc.create_maintenance_control.maintenance_box.MaintenanceBoxBlockEntity;
+import net.dantemc.create_maintenance_control.foundation.IgnorePlacingRulesItem;
+import net.dantemc.create_maintenance_control.content.maintenance_box.MaintenanceBoxBlock;
+import net.dantemc.create_maintenance_control.content.maintenance_box.MaintenanceBoxBlockEntity;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.neoforged.bus.api.IEventBus;
@@ -40,9 +41,7 @@ public class CreateMaintenance {
                     .register();
 
     public static final BlockEntityEntry<MaintenanceBoxBlockEntity> MAINTENANCE_BOX_BE =
-            REGISTRATE.blockEntity(
-                            "maintenance_box",
-                            MaintenanceBoxBlockEntity::new)
+            REGISTRATE.blockEntity("maintenance_box", MaintenanceBoxBlockEntity::new)
                     .validBlocks(MAINTENANCE_BOX)
                     .register();
 

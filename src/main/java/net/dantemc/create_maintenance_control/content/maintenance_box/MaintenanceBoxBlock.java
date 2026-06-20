@@ -1,10 +1,11 @@
-package net.dantemc.create_maintenance_control.maintenance_box;
+package net.dantemc.create_maintenance_control.content.maintenance_box;
 
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import net.dantemc.create_maintenance_control.CreateMaintenance;
-import net.dantemc.create_maintenance_control.CreateMaintenanceShapes;
+import net.dantemc.create_maintenance_control.foundation.CreateMaintenanceShapes;
+import net.dantemc.create_maintenance_control.railway.OfflineStationManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;

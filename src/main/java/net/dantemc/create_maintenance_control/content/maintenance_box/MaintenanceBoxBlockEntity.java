@@ -1,7 +1,8 @@
-package net.dantemc.create_maintenance_control.maintenance_box;
+package net.dantemc.create_maintenance_control.content.maintenance_box;
 
 import com.simibubi.create.content.trains.station.GlobalStation;
 import net.dantemc.create_maintenance_control.CreateMaintenance;
+import net.dantemc.create_maintenance_control.railway.OfflineStationManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
