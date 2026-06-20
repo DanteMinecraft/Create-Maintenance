@@ -4,12 +4,17 @@ import com.simibubi.create.content.trains.station.GlobalStation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
-import java.util.*;
 
 public class OfflineStationManager {
-    public static final Map<UUID, BlockPos> STATION_BOXES = new HashMap<>();
 
-    //temp
+    public static void registerBox(Level level, BlockPos boxPos, String stationFilter, boolean shouldSkip) {
+
+    }
+
+    public static void unregisterBox(Level level, BlockPos boxPos) {
+
+    }
+
     public static boolean isStationSkipped(Level level, GlobalStation station) {
         return false;
     }
