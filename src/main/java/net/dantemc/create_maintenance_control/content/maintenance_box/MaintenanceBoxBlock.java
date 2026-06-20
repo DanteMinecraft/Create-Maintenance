@@ -50,6 +50,8 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
                     state.setValue(POWERED, powered),
                     Block.UPDATE_ALL);
         }
+
+        /*TODO: update maintenance status*/
     }
 
     @Override
@@ -60,15 +62,8 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
             return;
 
         CreateMaintenance.debug("Maintenance Box placed");
-        GlobalStation gs = StationUtils.findNearbyStation(level, pos);
 
-        if (gs == null) {
-            System.out.println(OfflineStationManager.OFFLINE_STATIONS);
-            return;
-        }
-
-        OfflineStationManager.setOffline(gs.getId());
-        System.out.println(OfflineStationManager.OFFLINE_STATIONS);
+        /*TODO: register maintenance status*/
     }
 
     @Override
@@ -79,15 +74,8 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
             return;
 
         CreateMaintenance.debug("Maintenance Box removed");
-        GlobalStation gs = StationUtils.findNearbyStation(level, pos);
 
-        if (gs == null) {
-            System.out.println(OfflineStationManager.OFFLINE_STATIONS);
-            return;
-        }
-
-        OfflineStationManager.setOnline(gs.getId());
-        System.out.println(OfflineStationManager.OFFLINE_STATIONS);
+        /*TODO: unregister maintenance status*/
     }
 
     @Override

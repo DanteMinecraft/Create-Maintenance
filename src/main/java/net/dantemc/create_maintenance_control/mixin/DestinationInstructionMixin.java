@@ -32,78 +32,20 @@ public abstract class DestinationInstructionMixin {
                     target = "Ljava/util/ArrayList;add(Ljava/lang/Object;)Z"
             )
     )
-    private boolean maintenance$filterOfflineStations(
+    private boolean maintenance$filterSkippedStations(
             ArrayList<GlobalStation> validStations,
-            Object stationObj, ScheduleRuntime runtime, Level level) {
+            Object stationObj,
+            ScheduleRuntime runtime,
+            Level level) {
 
         GlobalStation station = (GlobalStation) stationObj;
 
-        if (OfflineStationManager.shouldSkip(level, station)) {
+        if (OfflineStationManager.isStationSkipped(level, station)) {
             return false;
         }
 
-        CreateMaintenance.debug(
-                "Accepted station: {}",
-                station.name
-        );
+        return validStations.add(station);
 
-        boolean result = validStations.add(station);
-
-        CreateMaintenance.debug(
-                "Valid stations count: {}",
-                validStations.size()
-        );
-
-        for (GlobalStation valid : validStations) {
-            CreateMaintenance.debug(
-                    "-> {}",
-                    valid.name
-            );
-        }
-
-        return result;
-
-    }
-
-    @Inject(
-            method = "start",
-            at = @At("RETURN")
-    )
-    private void maintenance$debugResult(
-            ScheduleRuntime runtime,
-            Level level,
-            CallbackInfoReturnable<DiscoveredPath> cir) {
-
-        DiscoveredPath path = cir.getReturnValue();
-
-        if (path == null) {
-            CreateMaintenance.debug(
-                    "PATHFINDING FAILED FOR ENTRY {}",
-                    runtime.currentEntry
-            );
-        } else {
-            CreateMaintenance.debug(
-                    "PATHFINDING SUCCESS FOR ENTRY {}",
-                    runtime.currentEntry
-            );
-        }
-
-        CreateMaintenance.debug(
-                "Current navigation destination: {}",
-                runtime.train.navigation.destination == null
-                        ? "null"
-                        : runtime.train.navigation.destination.name
-        );
-
-        CreateMaintenance.debug(
-                "Train currently at: {}",
-                runtime.train.navigation.destination
-        );
-
-        CreateMaintenance.debug(
-                "Returned path = {}",
-                path
-        );
     }
 
     @Inject(
@@ -111,12 +53,10 @@ public abstract class DestinationInstructionMixin {
             at = @At("HEAD"),
             cancellable = true
     )
-    private void maintenance$checkForOfflineDestination(
+    private void maintenance$skipEntryIfAllMatchingStationsAreSkipped(
             ScheduleRuntime runtime,
             Level level,
             CallbackInfoReturnable<DiscoveredPath> cir) {
-
-        CreateMaintenance.debug("START ENTRY: " + runtime.currentEntry);
 
         String regex = getFilterForRegex();
 
@@ -124,47 +64,31 @@ public abstract class DestinationInstructionMixin {
         boolean allOffline = true;
 
         for (GlobalStation station : runtime.train.graph.getPoints(EdgePointType.STATION)) {
-
             if (!station.name.matches(regex))
                 continue;
 
             foundMatch = true;
 
-            CreateMaintenance.debug("Matched station: " + station.name);
-
-            if (!OfflineStationManager.shouldSkip(level, station)) {
+            if (!OfflineStationManager.isStationSkipped(level, station)) {
                 allOffline = false;
+                break;
             }
         }
 
-        CreateMaintenance.debug("Current entry: " + runtime.currentEntry);
-        CreateMaintenance.debug("Regex: " + regex);
-        CreateMaintenance.debug("Found match: " + foundMatch);
-        CreateMaintenance.debug("All offline: " + allOffline);
-
-        if (foundMatch && allOffline) {
-
-            CreateMaintenance.debug(
-                    "SKIPPING ENTRY {}",
-                    runtime.currentEntry
-            );
-
-            CreateMaintenance.debug(
-                    "Schedule size: {}",
-                    runtime.schedule.entries.size()
-            );
-
-            runtime.currentEntry =
-                    (runtime.currentEntry + 1)
-                            % runtime.schedule.entries.size();
-
-            CreateMaintenance.debug(
-                    "NEW ENTRY {}",
-                    runtime.currentEntry
-            );
-
-            cir.setReturnValue(null);
-            cir.cancel();
+        if (!foundMatch || !allOffline) {
+            return;
         }
+
+        CreateMaintenance.debug(
+                "Skipping destination entry {} because all matching stations are under maintenance",
+                runtime.currentEntry
+        );
+
+        runtime.currentEntry =
+                (runtime.currentEntry + 1)
+                        % runtime.schedule.entries.size();
+
+        cir.setReturnValue(null);
+        cir.cancel();
     }
 }

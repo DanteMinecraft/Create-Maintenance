@@ -1,8 +1,6 @@
 package net.dantemc.create_maintenance_control.content.maintenance_box;
 
-import com.simibubi.create.content.trains.station.GlobalStation;
 import net.dantemc.create_maintenance_control.CreateMaintenance;
-import net.dantemc.create_maintenance_control.railway.OfflineStationManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -16,25 +14,6 @@ public class MaintenanceBoxBlockEntity extends BlockEntity {
     }
 
     public void registerStation() {
-        CreateMaintenance.debug("REGISTER STATION CALLED");
-
-        Level level = getLevel();
-
-        if (level == null) {
-            CreateMaintenance.debug("LEVEL NULL");
-            return;
-        }
-
-        GlobalStation gs = StationUtils.findNearbyStation(level, getBlockPos());
-
-        if (gs == null) {
-            CreateMaintenance.debug("STATION NULL");
-            return;
-        }
-
-        CreateMaintenance.debug("FOUND STATION: " + gs.name);
-
-        OfflineStationManager.setOffline(gs.getId());
     }
 
     @Override
