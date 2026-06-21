@@ -45,7 +45,7 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
 
         boolean powered = level.hasNeighborSignal(pos);
 
-        if (powered = state.getValue(POWERED))
+        if (powered == state.getValue(POWERED))
             return;
 
         level.setBlock(pos, state.setValue(POWERED, powered), Block.UPDATE_ALL);
@@ -54,7 +54,6 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
         if (station == null)
             return;
         OfflineStationManager.registerBox(level, pos, station.name, !powered);
-
     }
 
     @Override
@@ -66,10 +65,17 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
 
         CreateMaintenance.debug("Maintenance Box placed");
 
+        boolean powered = level.hasNeighborSignal(pos);
+
+        if (powered != state.getValue(POWERED)) {
+            state = state.setValue(POWERED, powered);
+
+            level.setBlock(pos, state, Block.UPDATE_ALL);
+        }
+
         GlobalStation station = StationUtils.findNearbyStation(level, pos);
         if (station == null)
             return;
-        boolean powered = level.hasNeighborSignal(pos);
         OfflineStationManager.registerBox(level, pos, station.name, !powered);
     }
 
