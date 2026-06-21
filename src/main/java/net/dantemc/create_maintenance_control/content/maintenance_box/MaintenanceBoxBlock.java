@@ -45,13 +45,16 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
 
         boolean powered = level.hasNeighborSignal(pos);
 
-        if (powered != state.getValue(POWERED)) {
-            level.setBlock(pos,
-                    state.setValue(POWERED, powered),
-                    Block.UPDATE_ALL);
-        }
+        if (powered = state.getValue(POWERED))
+            return;
 
-        /*TODO: update maintenance status*/
+        level.setBlock(pos, state.setValue(POWERED, powered), Block.UPDATE_ALL);
+
+        GlobalStation station = StationUtils.findNearbyStation(level, pos);
+        if (station == null)
+            return;
+        OfflineStationManager.registerBox(level, pos, station.name, !powered);
+
     }
 
     @Override
@@ -63,19 +66,26 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
 
         CreateMaintenance.debug("Maintenance Box placed");
 
-        /*TODO: register maintenance status*/
+        GlobalStation station = StationUtils.findNearbyStation(level, pos);
+        if (station == null)
+            return;
+        boolean powered = level.hasNeighborSignal(pos);
+        OfflineStationManager.registerBox(level, pos, station.name, !powered);
     }
 
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         IBE.onRemove(state, level, pos, newState);
 
+        if (state.getBlock() == newState.getBlock())
+            return;
+
         if (level.isClientSide)
             return;
 
         CreateMaintenance.debug("Maintenance Box removed");
 
-        /*TODO: unregister maintenance status*/
+        OfflineStationManager.unregisterBox(level, pos);
     }
 
     @Override

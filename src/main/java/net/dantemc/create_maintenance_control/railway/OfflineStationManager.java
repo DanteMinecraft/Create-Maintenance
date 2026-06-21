@@ -38,9 +38,9 @@ public class OfflineStationManager {
         for (BlockPos boxPos : allData.keySet()) {
             MaintenanceEntry entry = allData.get(boxPos);
 
-            if ((entry.shouldSkip())) {
+            if (entry.shouldSkip()) {
 
-                if (entry.stationFilter() == stationName) {
+                if (Objects.equals(entry.stationFilter(), stationName)) {
                     return true;
                 }
             }
