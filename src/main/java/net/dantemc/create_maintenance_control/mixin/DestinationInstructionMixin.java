@@ -6,6 +6,7 @@ import com.simibubi.create.content.trains.schedule.destination.DestinationInstru
 
 import com.simibubi.create.content.trains.station.GlobalStation;
 import net.dantemc.create_maintenance_control.CreateMaintenance;
+import net.dantemc.create_maintenance_control.content.maintenance_box.StationUtils;
 import net.dantemc.create_maintenance_control.railway.OfflineStationManager;
 import net.minecraft.world.level.Level;
 import com.simibubi.create.content.trains.graph.EdgePointType;
@@ -24,6 +25,8 @@ public abstract class DestinationInstructionMixin {
 
     @Shadow
     public abstract String getFilterForRegex();
+
+    @Shadow public abstract String getFilter();
 
     @Redirect(
             method = "start",
@@ -80,8 +83,9 @@ public abstract class DestinationInstructionMixin {
         }
 
         CreateMaintenance.debug(
-                "Skipping destination entry {} because all matching stations are under maintenance",
-                runtime.currentEntry
+                "Skipping destination entry {} ({}) because matching stations are under maintenance",
+                runtime.currentEntry,
+                getFilterForRegex()
         );
 
         runtime.currentEntry =
