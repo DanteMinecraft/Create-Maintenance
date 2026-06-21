@@ -65,7 +65,25 @@ public class MaintenanceSavedData extends SavedData {
     }
 
     @Override
-    public CompoundTag save(CompoundTag compoundTag, HolderLookup.Provider provider) {
-        return compoundTag;
+    public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
+        ListTag entryList = new ListTag();
+
+        for (BlockPos boxPos : entries.keySet()) {
+            MaintenanceEntry entry = entries.get(boxPos);
+
+            CompoundTag entryTag = new CompoundTag();
+
+            entryTag.putInt("BoxX", boxPos.getX());
+            entryTag.putInt("BoxY", boxPos.getY());
+            entryTag.putInt("BoxZ", boxPos.getZ());
+
+            entryTag.putString("StationFilter", entry.stationFilter());
+            entryTag.putBoolean("ShouldSkip", entry.shouldSkip());
+
+            entryList.add(entryTag);
+        }
+
+        tag.put("Entries", entryList);
+        return tag;
     }
 }
