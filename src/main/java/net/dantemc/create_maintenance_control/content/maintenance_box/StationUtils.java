@@ -1,4 +1,4 @@
-package net.dantemc.create_maintenance_control.maintenance_box;
+package net.dantemc.create_maintenance_control.content.maintenance_box;
 
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
@@ -15,20 +15,6 @@ public class StationUtils {
 
             if (be instanceof StationBlockEntity stationBlock) {
                 return stationBlock.getStation();
-            }
-        }
-        return null;
-    }
-
-    public static BlockPos findNearbyMaintenanceBox(Level level, GlobalStation station) {
-
-        BlockPos stationPos = station.blockEntityPos;
-
-        for (Direction dir : Direction.values()) {
-            BlockPos pos = stationPos.relative(dir);
-
-            if (level.getBlockState(pos).getBlock() instanceof MaintenanceBoxBlock) {
-                return pos;
             }
         }
         return null;
