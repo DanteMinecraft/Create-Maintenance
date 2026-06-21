@@ -83,9 +83,10 @@ public abstract class DestinationInstructionMixin {
         }
 
         CreateMaintenance.debug(
-                "Skipping destination entry {} ({}) because matching stations are under maintenance",
+                "Skipping destination entry {} with filter '{}' for {} because matching stations are under maintenance",
                 runtime.currentEntry,
-                getFilterForRegex()
+                getFilterForRegex(),
+                runtime.train
         );
 
         runtime.currentEntry =
