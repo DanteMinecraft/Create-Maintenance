@@ -1,10 +1,11 @@
-package net.dantemc.create_maintenance_control.maintenance_box;
+package net.dantemc.create_maintenance_control.content.maintenance_box;
 
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import net.dantemc.create_maintenance_control.CreateMaintenance;
-import net.dantemc.create_maintenance_control.CreateMaintenanceShapes;
+import net.dantemc.create_maintenance_control.foundation.CreateMaintenanceShapes;
+import net.dantemc.create_maintenance_control.railway.OfflineStationManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -44,11 +45,15 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
 
         boolean powered = level.hasNeighborSignal(pos);
 
-        if (powered != state.getValue(POWERED)) {
-            level.setBlock(pos,
-                    state.setValue(POWERED, powered),
-                    Block.UPDATE_ALL);
-        }
+        if (powered == state.getValue(POWERED))
+            return;
+
+        level.setBlock(pos, state.setValue(POWERED, powered), Block.UPDATE_ALL);
+
+        GlobalStation station = StationUtils.findNearbyStation(level, pos);
+        if (station == null)
+            return;
+        OfflineStationManager.registerBox(level, pos, station.name, !powered);
     }
 
     @Override
@@ -59,34 +64,34 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
             return;
 
         CreateMaintenance.debug("Maintenance Box placed");
-        GlobalStation gs = StationUtils.findNearbyStation(level, pos);
 
-        if (gs == null) {
-            System.out.println(OfflineStationManager.OFFLINE_STATIONS);
-            return;
+        boolean powered = level.hasNeighborSignal(pos);
+
+        if (powered != state.getValue(POWERED)) {
+            state = state.setValue(POWERED, powered);
+
+            level.setBlock(pos, state, Block.UPDATE_ALL);
         }
 
-        OfflineStationManager.setOffline(gs.getId());
-        System.out.println(OfflineStationManager.OFFLINE_STATIONS);
+        GlobalStation station = StationUtils.findNearbyStation(level, pos);
+        if (station == null)
+            return;
+        OfflineStationManager.registerBox(level, pos, station.name, !powered);
     }
 
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         IBE.onRemove(state, level, pos, newState);
 
+        if (state.getBlock() == newState.getBlock())
+            return;
+
         if (level.isClientSide)
             return;
 
         CreateMaintenance.debug("Maintenance Box removed");
-        GlobalStation gs = StationUtils.findNearbyStation(level, pos);
 
-        if (gs == null) {
-            System.out.println(OfflineStationManager.OFFLINE_STATIONS);
-            return;
-        }
-
-        OfflineStationManager.setOnline(gs.getId());
-        System.out.println(OfflineStationManager.OFFLINE_STATIONS);
+        OfflineStationManager.unregisterBox(level, pos);
     }
 
     @Override
