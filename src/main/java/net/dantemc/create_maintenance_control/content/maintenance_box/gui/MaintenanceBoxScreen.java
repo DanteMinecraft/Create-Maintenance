@@ -1,56 +1,73 @@
 package net.dantemc.create_maintenance_control.content.maintenance_box.gui;
 
-public class MaintenanceBoxScreen {
-}
-
-/*import com.simibubi.create.api.behaviour.display.DisplaySource;
-import com.simibubi.create.api.behaviour.display.DisplayTarget;
-import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlockEntity;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.ModularGuiLine;
 import com.simibubi.create.foundation.gui.widget.IconButton;
-import com.simibubi.create.foundation.gui.widget.Label;
-import com.simibubi.create.foundation.gui.widget.ScrollInput;
-import net.createmod.catnip.data.Couple;
+import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import net.createmod.catnip.gui.AbstractSimiScreen;
-import net.createmod.catnip.gui.widget.AbstractSimiWidget;
 import net.dantemc.create_maintenance_control.content.maintenance_box.MaintenanceBoxBlockEntity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.network.chat.Component;
 
-import java.util.Collections;
 import java.util.List;
 
 public class MaintenanceBoxScreen extends AbstractSimiScreen {
 
-    private static final ItemStack FALLBACK = new ItemStack(Items.BARRIER);
+    private final AllGuiTextures background = AllGuiTextures.DATA_GATHERER;
+    private final MaintenanceBoxBlockEntity blockEntity;
 
-    private AllGuiTextures background;
-    private MaintenanceBoxBlockEntity blockEntity;
     private IconButton confirmButton;
+    private EditBox stationFilterBox;
+    private SelectionScrollInput redstoneModeSelector;
 
-    BlockState sourceState;
-    BlockState targetState;
-    List<DisplaySource> sources;
-    DisplayTarget target;
-
-    ScrollInput sourceTypeSelector;
-    Label sourceTypeLabel;
-    ScrollInput targetLineSelector;
-    Label targetLineLabel;
-    AbstractSimiWidget sourceWidget;
-    AbstractSimiWidget targetWidget;
-
-    Couple<ModularGuiLine> configWidgets;
-
-    public MaintenanceBoxScreen(MaintenanceBoxBlockEntity be) {
-        this.background = AllGuiTextures.DATA_GATHERER;
-        this.blockEntity = be;
-        sources = Collections.emptyList();
-        configWidgets = Couple.create(ModularGuiLine::new);
-        target = null;
+    public MaintenanceBoxScreen(MaintenanceBoxBlockEntity blockEntity) {
+        this.blockEntity = blockEntity;
     }
 
-}*/
+    @Override
+    protected void init() {
+        setWindowSize(background.getWidth(), background.getHeight());
+        super.init();
+
+        int x = guiLeft;
+        int y = guiTop;
+
+        // placeholders
+        String stationFilter = "";
+        int redstoneModeIndex = 0;
+
+        // station filter textbox
+        stationFilterBox = new EditBox(font, x + 24, y + 28, 120, 18, Component.literal("Station Filter"));
+        stationFilterBox.setValue(stationFilter);
+        stationFilterBox.setMaxLength(64);
+        addRenderableWidget(stationFilterBox);
+
+        // redstone mode selector
+        redstoneModeSelector = (SelectionScrollInput) new SelectionScrollInput(x + 24, y + 70, 120, 18)
+                .forOptions(List.of(
+                        Component.literal("Unpowered = Maintenance"),
+                        Component.literal("Powered = Maintenance")
+                ));
+        redstoneModeSelector.setState(redstoneModeIndex);
+        addRenderableWidget(redstoneModeSelector);
+
+        // Confirm button
+        confirmButton = new IconButton(x + background.getWidth() - 33, y + background.getHeight() - 24, AllIcons.I_CONFIRM);
+        confirmButton.withCallback(this::onConfirm);
+        addRenderableWidget(confirmButton);
+    }
+
+    @Override
+    protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        background.render(graphics, guiLeft, guiTop);
+
+        graphics.drawString(font, "Maintenance Box", guiLeft + 24, guiTop + 10, 0x404040, false);
+        graphics.drawString(font, "Station Filter", guiLeft + 24, guiTop + 18, 0x575F7A, false);
+        graphics.drawString(font, "Redstone Mode", guiLeft + 24, guiTop + 58, 0x575F7A, false);
+    }
+
+    private void onConfirm() {
+        onClose();
+    }
+}

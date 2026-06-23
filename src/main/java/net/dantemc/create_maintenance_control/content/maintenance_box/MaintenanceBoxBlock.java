@@ -11,6 +11,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -22,6 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
@@ -103,7 +105,7 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
     protected void displayScreen(MaintenanceBoxBlockEntity be, Player player) {
         if (!(player instanceof LocalPlayer))
             return;
-        //ScreenOpener.open(new MaintenanceBoxScreen(be));
+        ScreenOpener.open(new MaintenanceBoxScreen(be));
     }
 
     @Override
@@ -125,6 +127,15 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
     @Override
     public VoxelShape getShape(BlockState State, BlockGetter Level, BlockPos Pos, CollisionContext Context) {
         return CreateMaintenanceShapes.MAINTENANCE_BOX.get(State.getValue(FACING));
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (level.isClientSide) {
+            withBlockEntityDo(level, pos, be -> displayScreen(be, player));
+        }
+
+        return InteractionResult.SUCCESS;
     }
 
     @Override

@@ -2,6 +2,7 @@ package net.dantemc.create_maintenance_control.content.maintenance_box;
 
 import com.simibubi.create.content.trains.station.GlobalStation;
 import net.dantemc.create_maintenance_control.CreateMaintenance;
+import net.dantemc.create_maintenance_control.railway.MaintenanceEntry;
 import net.dantemc.create_maintenance_control.railway.OfflineStationManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -29,6 +30,14 @@ public class MaintenanceBoxBlockEntity extends BlockEntity {
         boolean powered = getBlockState().getValue(MaintenanceBoxBlock.POWERED);
 
         OfflineStationManager.refreshBox(level, getBlockPos(), station.name, powered);
+    }
+
+    public MaintenanceEntry getEntry() {
+        Level level = getLevel();
+        if (level == null || level.isClientSide)
+            return null;
+
+        return OfflineStationManager.getEntry(level, worldPosition);
     }
 
     @Override
