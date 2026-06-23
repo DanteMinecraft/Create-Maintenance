@@ -1,14 +1,17 @@
 package net.dantemc.create_maintenance_control.content.maintenance_box;
-
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
+import net.createmod.catnip.gui.ScreenOpener;
 import net.dantemc.create_maintenance_control.CreateMaintenance;
+import net.dantemc.create_maintenance_control.content.maintenance_box.gui.MaintenanceBoxScreen;
 import net.dantemc.create_maintenance_control.foundation.CreateMaintenanceShapes;
 import net.dantemc.create_maintenance_control.railway.OfflineStationManager;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -21,6 +24,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements IBE<MaintenanceBoxBlockEntity> {
 
@@ -53,7 +58,7 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
         GlobalStation station = StationUtils.findNearbyStation(level, pos);
         if (station == null)
             return;
-        OfflineStationManager.registerBox(level, pos, station.name, !powered);
+        OfflineStationManager.refreshBox(level, pos, station.name, powered);
     }
 
     @Override
@@ -76,7 +81,7 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
         GlobalStation station = StationUtils.findNearbyStation(level, pos);
         if (station == null)
             return;
-        OfflineStationManager.registerBox(level, pos, station.name, !powered);
+        OfflineStationManager.refreshBox(level, pos, station.name, powered);
     }
 
     @Override
@@ -92,6 +97,13 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
         CreateMaintenance.debug("Maintenance Box removed");
 
         OfflineStationManager.unregisterBox(level, pos);
+    }
+
+    @OnlyIn(value = Dist.CLIENT)
+    protected void displayScreen(MaintenanceBoxBlockEntity be, Player player) {
+        if (!(player instanceof LocalPlayer))
+            return;
+        //ScreenOpener.open(new MaintenanceBoxScreen(be));
     }
 
     @Override

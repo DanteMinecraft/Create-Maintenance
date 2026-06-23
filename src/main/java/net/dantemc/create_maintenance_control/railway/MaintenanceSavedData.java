@@ -1,5 +1,6 @@
 package net.dantemc.create_maintenance_control.railway;
 
+import net.dantemc.create_maintenance_control.content.maintenance_box.MaintenanceRedstoneMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -57,8 +58,17 @@ public class MaintenanceSavedData extends SavedData {
 
             String stationFilter = entryTag.getString("StationFilter");
             boolean shouldSkip = entryTag.getBoolean("ShouldSkip");
+            MaintenanceRedstoneMode redstoneMode;
 
-            MaintenanceEntry entry = new MaintenanceEntry(stationFilter, shouldSkip);
+            try {
+                redstoneMode = MaintenanceRedstoneMode.valueOf(entryTag.getString("RedstoneMode"));
+            } catch (IllegalArgumentException e) {
+                redstoneMode = MaintenanceRedstoneMode.UNPOWERED_ACTIVE;
+            }
+
+            boolean skipDownstream = entryTag.getBoolean("SkipDownstream");
+
+            MaintenanceEntry entry = new MaintenanceEntry(stationFilter, shouldSkip, redstoneMode, skipDownstream);
             data.entries.put(boxPos, entry);
         }
         return data;
@@ -79,6 +89,9 @@ public class MaintenanceSavedData extends SavedData {
 
             entryTag.putString("StationFilter", entry.stationFilter());
             entryTag.putBoolean("ShouldSkip", entry.shouldSkip());
+            entryTag.putString("RedstoneMode", entry.redstoneMode().name());
+            entryTag.putBoolean("SkipDownstream", entry.skipDownstream());
+
 
             entryList.add(entryTag);
         }

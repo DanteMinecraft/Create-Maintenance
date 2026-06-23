@@ -28,7 +28,7 @@ public class MaintenanceBoxBlockEntity extends BlockEntity {
 
         boolean powered = getBlockState().getValue(MaintenanceBoxBlock.POWERED);
 
-        OfflineStationManager.registerBox(level, getBlockPos(), station.name, !powered);
+        OfflineStationManager.refreshBox(level, getBlockPos(), station.name, powered);
     }
 
     @Override
