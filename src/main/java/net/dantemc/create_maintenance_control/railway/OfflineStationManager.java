@@ -44,7 +44,7 @@ public class OfflineStationManager {
         return entry;
     }
 
-    public static void refreshBox(Level level, BlockPos boxPos, boolean powered) {
+    public static void refreshBox(Level level, BlockPos boxPos, boolean powered, boolean skipDownstream) {
         MaintenanceEntry entry = getEntry(level, boxPos);
         if (entry == null)
             return;
@@ -61,7 +61,7 @@ public class OfflineStationManager {
         setEntry(level, boxPos, updated);
     }
 
-    public static void updateBoxSettings(Level level, BlockPos boxPos, String stationFilter, MaintenanceRedstoneMode redstoneMode) {
+    public static void updateBoxSettings(Level level, BlockPos boxPos, String stationFilter, MaintenanceRedstoneMode redstoneMode, boolean skipDownstream) {
         MaintenanceEntry current = getEntry(level, boxPos);
         if (current == null)
             return;
@@ -69,7 +69,7 @@ public class OfflineStationManager {
         boolean powered = level.getBlockState(boxPos).getValue(MaintenanceBoxBlock.POWERED);
         boolean shouldSkip = redstoneMode.isMaintenanceActive(powered);
 
-        MaintenanceEntry updated = new MaintenanceEntry(stationFilter, shouldSkip, redstoneMode, current.skipDownstream());
+        MaintenanceEntry updated = new MaintenanceEntry(stationFilter, shouldSkip, redstoneMode, skipDownstream);
 
         setEntry(level, boxPos, updated);
     }

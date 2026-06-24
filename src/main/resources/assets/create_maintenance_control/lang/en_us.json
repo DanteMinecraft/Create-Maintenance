@@ -8,6 +8,8 @@
   "block.create_maintenance_control.maintenance_box.tooltip.behaviour1": "Trains with this station _in their schedules_ will _skip it_ while maintenance is active.",
   "block.create_maintenance_control.maintenance_box.tooltip.behaviour2": "When powered, maintenance is _temporarily disabled_ and trains will _stop at the station_ as usual.",
 
+  "gui.maintenance_box.title": "Maintenance Box",
+
   "create_maintenance_control.configuration.title": "Create: Maintenance Control Configs",
   "create_maintenance_control.configuration.section.create_maintenance_control.common.toml": "Create: Maintenance Control Configs",
   "create_maintenance_control.configuration.section.create_maintenance_control.common.toml.title": "Create: Maintenance Control Configs",

@@ -16,22 +16,25 @@ public class MaintenanceBoxConfigurationPacket extends BlockEntityConfigurationP
             BlockPos.STREAM_CODEC, packet -> packet.pos,
             ByteBufCodecs.STRING_UTF8, packet -> packet.stationFilter,
             ByteBufCodecs.VAR_INT, packet -> packet.redstoneMode.ordinal(),
-            (pos, stationFilter, redstoneModeOrdinal) ->
-                    new MaintenanceBoxConfigurationPacket(pos, stationFilter, MaintenanceRedstoneMode.values()[redstoneModeOrdinal])
+            ByteBufCodecs.BOOL, packet -> packet.skipDownstream,
+            (pos, stationFilter, redstoneModeOrdinal, skipDownstream) ->
+                    new MaintenanceBoxConfigurationPacket(pos, stationFilter, MaintenanceRedstoneMode.values()[redstoneModeOrdinal], skipDownstream)
     );
 
     private final String stationFilter;
     private final MaintenanceRedstoneMode redstoneMode;
+    private final boolean skipDownstream;
 
-    public MaintenanceBoxConfigurationPacket(BlockPos pos, String stationFilter, MaintenanceRedstoneMode redstoneMode) {
+    public MaintenanceBoxConfigurationPacket(BlockPos pos, String stationFilter, MaintenanceRedstoneMode redstoneMode, boolean skipDownstream) {
         super(pos);
         this.stationFilter = stationFilter;
         this.redstoneMode = redstoneMode;
+        this.skipDownstream = skipDownstream;
     }
 
     @Override
     protected void applySettings(ServerPlayer player, MaintenanceBoxBlockEntity be) {
-        be.applySettings(stationFilter, redstoneMode);
+        be.applySettings(stationFilter, redstoneMode, skipDownstream);
     }
 
     @Override

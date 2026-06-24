@@ -2,8 +2,12 @@ package net.dantemc.create_maintenance_control.content.maintenance_box.gui;
 
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
+import com.simibubi.create.foundation.gui.ModularGuiLine;
+import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.gui.widget.IconButton;
+import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
+import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.gui.AbstractSimiScreen;
 import net.createmod.catnip.platform.CatnipServices;
 import net.dantemc.create_maintenance_control.CreateMaintenance;
@@ -11,7 +15,10 @@ import net.dantemc.create_maintenance_control.content.maintenance_box.Maintenanc
 import net.dantemc.create_maintenance_control.content.maintenance_box.MaintenanceRedstoneMode;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 import java.util.List;
 
@@ -21,8 +28,12 @@ public class MaintenanceBoxScreen extends AbstractSimiScreen {
     private final MaintenanceBoxBlockEntity blockEntity;
 
     private IconButton confirmButton;
-    private EditBox stationFilterBox;
-    private SelectionScrollInput redstoneModeSelector;
+
+    private ModularGuiLine stationFilterLine;
+    private ModularGuiLine redstoneModeLine;
+    private ModularGuiLine skipDownstreamLine;
+
+    private CompoundTag configData;
 
     public MaintenanceBoxScreen(MaintenanceBoxBlockEntity blockEntity) {
         this.blockEntity = blockEntity;
@@ -36,23 +47,45 @@ public class MaintenanceBoxScreen extends AbstractSimiScreen {
         int x = guiLeft;
         int y = guiTop;
 
-        String stationFilter = blockEntity.getStationFilter();
-        int redstoneModeIndex = blockEntity.getRedstoneMode().ordinal();
+        configData = new CompoundTag();
+        configData.putString("StationFilter", blockEntity.getStationFilter());
+        configData.putInt("RedstoneMode", blockEntity.getRedstoneMode().ordinal());
+        configData.putBoolean("SkipDownstream", blockEntity.shouldSkipDownstream());
 
         // station filter textbox
-        stationFilterBox = new EditBox(font, x + 24, y + 28, 120, 18, Component.literal("Station Filter"));
-        stationFilterBox.setValue(stationFilter);
-        stationFilterBox.setMaxLength(64);
-        addRenderableWidget(stationFilterBox);
+        stationFilterLine = new ModularGuiLine();
+        new ModularGuiLineBuilder(font, stationFilterLine, x + 24, y + 28)
+                .addTextInput(0, 160, (editBox, tooltip) -> {
+                    editBox.setMaxLength(64);
+                    tooltip.withTooltip(List.of(
+                            Component.literal("Station Name Filter")
+                    ));
+                }, "StationFilter");
 
         // redstone mode selector
-        redstoneModeSelector = (SelectionScrollInput) new SelectionScrollInput(x + 24, y + 70, 120, 18)
-                .forOptions(List.of(
-                        Component.literal("Unpowered = Maintenance"),
-                        Component.literal("Powered = Maintenance")
-                ));
-        redstoneModeSelector.setState(redstoneModeIndex);
-        addRenderableWidget(redstoneModeSelector);
+        redstoneModeLine = new ModularGuiLine();
+        new ModularGuiLineBuilder(font, redstoneModeLine, x + 24, y + 68)
+                .addSelectionScrollInput(0, 160, (input, label) -> {
+                    input.forOptions(List.of(
+                            Component.literal("Unpowered = Maintenance"),
+                            Component.literal("Powered = Maintenance")
+                    ));
+                }, "RedstoneMode");
+
+        // Skip downstream stations selector
+        skipDownstreamLine = new ModularGuiLine();
+        new ModularGuiLineBuilder(font, skipDownstreamLine, x + 24, y + 108)
+                .addSelectionScrollInput(0, 160, (input, label) -> {
+                    input.forOptions(List.of(
+                            Component.literal("Disabled"),
+                            Component.literal("Enabled")
+                    ));
+                }, "SkipDownstream");
+
+        // push initial values from configData into the widgets
+        stationFilterLine.loadValues(configData, this::addRenderableWidget, this::addRenderableOnly);
+        redstoneModeLine.loadValues(configData, this::addRenderableWidget, this::addRenderableOnly);
+        skipDownstreamLine.loadValues(configData, this::addRenderableWidget, this::addRenderableOnly);
 
         // Confirm button
         confirmButton = new IconButton(x + background.getWidth() - 33, y + background.getHeight() - 24, AllIcons.I_CONFIRM);
@@ -64,21 +97,34 @@ public class MaintenanceBoxScreen extends AbstractSimiScreen {
     protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         background.render(graphics, guiLeft, guiTop);
 
-        graphics.drawString(font, "Maintenance Box", guiLeft + 24, guiTop + 10, 0x404040, false);
+        int x = guiLeft;
+        int y = guiTop;
+
+        MutableComponent header = Component.translatable("gui.maintenance_box.title");
+        graphics.drawString(font, header, x + background.getWidth() / 2 - font.width(header) / 2, y + 4, 0x592424, false);
+
         graphics.drawString(font, "Station Filter", guiLeft + 24, guiTop + 18, 0x575F7A, false);
         graphics.drawString(font, "Redstone Mode", guiLeft + 24, guiTop + 58, 0x575F7A, false);
+        graphics.drawString(font, "Skip Downstream Stations", guiLeft + 24, guiTop + 98, 0x575F7A, false);
     }
 
     private void onConfirm() {
 
-        String stationFilter = stationFilterBox.getValue().trim();
+        CompoundTag tag = new CompoundTag();
 
-        MaintenanceRedstoneMode redstoneMode = MaintenanceRedstoneMode.values()[redstoneModeSelector.getState()];
+        stationFilterLine.saveValues(tag);
+        redstoneModeLine.saveValues(tag);
+        skipDownstreamLine.saveValues(tag);
 
-        boolean skipDownstream = false; // temporary until widget exist
+        String stationFilter = tag.getString("StationFilter");
+
+        int redstoneModeIndex = tag.getInt("RedstoneMode");
+        MaintenanceRedstoneMode redstoneMode = MaintenanceRedstoneMode.values()[redstoneModeIndex];
+
+        boolean skipDownstream = tag.getBoolean("SkipDownstream");
 
         CatnipServices.NETWORK.sendToServer(new MaintenanceBoxConfigurationPacket(blockEntity.getBlockPos(), stationFilter,
-                redstoneMode));
+                redstoneMode, skipDownstream));
 
         CreateMaintenance.debug("Station filter: " + stationFilter);
         CreateMaintenance.debug("Redstone mode: " + redstoneMode);

@@ -20,6 +20,7 @@ public class MaintenanceBoxBlockEntity extends SyncedBlockEntity {
 
     private String stationFilter = "";
     private MaintenanceRedstoneMode redstoneMode = MaintenanceRedstoneMode.UNPOWERED_ACTIVE;
+    private boolean skipDownstream = false;
 
     public String getStationFilter() {
         return stationFilter;
@@ -27,6 +28,10 @@ public class MaintenanceBoxBlockEntity extends SyncedBlockEntity {
 
     public MaintenanceRedstoneMode getRedstoneMode() {
         return redstoneMode;
+    }
+
+    public boolean shouldSkipDownstream() {
+        return skipDownstream;
     }
 
     public void registerStation() {
@@ -46,24 +51,25 @@ public class MaintenanceBoxBlockEntity extends SyncedBlockEntity {
         this.stationFilter = entry.stationFilter();
         this.redstoneMode = entry.redstoneMode();
 
-        OfflineStationManager.refreshBox(level, getBlockPos(), powered);
+        OfflineStationManager.refreshBox(level, getBlockPos(), powered, skipDownstream);
 
         setChanged();
         notifyUpdate();
     }
 
-    public void applySettings(String stationFilter, MaintenanceRedstoneMode redstoneMode) {
+    public void applySettings(String stationFilter, MaintenanceRedstoneMode redstoneMode, boolean skipDownstream) {
         Level level = getLevel();
         if (level == null || level.isClientSide)
             return;
 
         this.stationFilter = stationFilter;
         this.redstoneMode = redstoneMode;
+        this.skipDownstream = skipDownstream;
 
-        OfflineStationManager.updateBoxSettings(level, getBlockPos(), stationFilter, redstoneMode);
+        OfflineStationManager.updateBoxSettings(level, getBlockPos(), stationFilter, redstoneMode, skipDownstream);
 
         boolean powered = getBlockState().getValue(MaintenanceBoxBlock.POWERED);
-        OfflineStationManager.refreshBox(level, getBlockPos(), powered);
+        OfflineStationManager.refreshBox(level, getBlockPos(), powered, skipDownstream);
 
         setChanged();
         notifyUpdate();
@@ -89,6 +95,7 @@ public class MaintenanceBoxBlockEntity extends SyncedBlockEntity {
 
         tag.putString("StationFilter", stationFilter);
         tag.putString("RedstoneMode", redstoneMode.name());
+        tag.putBoolean("SkipDownstream", skipDownstream);
     }
 
     @Override
@@ -101,6 +108,10 @@ public class MaintenanceBoxBlockEntity extends SyncedBlockEntity {
             redstoneMode = MaintenanceRedstoneMode.valueOf(tag.getString("RedstoneMode"));
         } catch (IllegalArgumentException e) {
             redstoneMode = MaintenanceRedstoneMode.UNPOWERED_ACTIVE;
+        }
+
+        if (tag.contains("SkipDownstream")) {
+            skipDownstream = tag.getBoolean("SkipDownstream");
         }
     }
 }
