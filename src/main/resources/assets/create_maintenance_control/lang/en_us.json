@@ -16,8 +16,8 @@
   "gui.maintenance_box.redstone_mode.inverted": "Powered = Maintenance",
 
   "gui.maintenance_box.skip_downstream_stations.tooltip": "Skip downstream stations",
-  "gui.maintenance_box.skip_downstream_stations.false": "False",
-  "gui.maintenance_box.skip_downstream_stations.true": "True",
+  "gui.maintenance_box.skip_downstream_stations.false": "Off",
+  "gui.maintenance_box.skip_downstream_stations.true": "On",
 
   "create_maintenance_control.configuration.title": "Create: Maintenance Control Configs",
   "create_maintenance_control.configuration.section.create_maintenance_control.common.toml": "Create: Maintenance Control Configs",

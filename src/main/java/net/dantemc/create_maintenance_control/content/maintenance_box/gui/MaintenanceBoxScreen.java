@@ -2,6 +2,8 @@ package net.dantemc.create_maintenance_control.content.maintenance_box.gui;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllItems;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlock;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.ModularGuiLine;
@@ -11,6 +13,8 @@ import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.CreateLang;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
+import net.createmod.catnip.animation.Force;
+import net.createmod.catnip.animation.PhysicalFloat;
 import net.createmod.catnip.gui.AbstractSimiScreen;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.platform.CatnipServices;
@@ -18,6 +22,7 @@ import net.dantemc.create_maintenance_control.CreateMaintenance;
 import net.dantemc.create_maintenance_control.content.maintenance_box.MaintenanceBoxBlockEntity;
 import net.dantemc.create_maintenance_control.content.maintenance_box.MaintenanceRedstoneMode;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -25,6 +30,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 import java.util.List;
+
+import static net.createmod.catnip.config.ui.ConfigScreen.shadowState;
 
 public class MaintenanceBoxScreen extends AbstractSimiScreen {
 
@@ -108,6 +115,8 @@ public class MaintenanceBoxScreen extends AbstractSimiScreen {
         addRenderableWidget(confirmButton);
     }
 
+    public static final PhysicalFloat cogSpin = PhysicalFloat.create().withLimit(10f).withDrag(0.3).addForce(new Force.Static(.2f));
+
     @Override
     protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         background.render(graphics, guiLeft, guiTop);
@@ -116,11 +125,25 @@ public class MaintenanceBoxScreen extends AbstractSimiScreen {
         int y = guiTop;
 
         MutableComponent header = Component.translatable("gui.maintenance_box.title");
-        graphics.drawString(font, header, x + background.getWidth() / 2 - font.width(header) / 2, y + 4, 0x592424, false);
+        graphics.drawString(font, header, (x + background.getWidth() / 2 - font.width(header) / 2) - 2, y + 4, 0x592424, false);
 
-        PoseStack ms = graphics.pose();
-        ms.pushPose();
-        TransformStack.of(ms)
+        //cog
+        partialTicks = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false);
+        PoseStack poseStack = graphics.pose();
+        poseStack.pushPose();
+
+        poseStack.translate(x + background.getWidth() / 2f - 18, y + 50, 0);
+        poseStack.scale(28, 28, 1);
+        GuiGameElement.of(shadowState)
+                .rotateBlock(22.5, cogSpin.getValue(partialTicks), 22.5)
+                .render(graphics);
+
+        poseStack.popPose();
+
+        //block model
+        PoseStack ms2 = graphics.pose();
+        ms2.pushPose();
+        TransformStack.of(ms2)
                 .pushPose()
                 .translate(x + background.getWidth() + 4, y + background.getHeight() + 4, 100)
                 .scale(40)
@@ -129,7 +152,12 @@ public class MaintenanceBoxScreen extends AbstractSimiScreen {
         GuiGameElement.of(blockEntity.getBlockState()
                         .setValue(DisplayLinkBlock.FACING, Direction.UP))
                 .render(graphics);
-        ms.popPose();
+        ms2.popPose();
+    }
+
+    @Override
+    public void tick() {
+        cogSpin.tick();
     }
 
     private void onConfirm() {
