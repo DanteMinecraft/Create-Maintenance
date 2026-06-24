@@ -1,22 +1,24 @@
 package net.dantemc.create_maintenance_control.content.maintenance_box.gui;
 
-import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlock;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.ModularGuiLine;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.gui.widget.IconButton;
-import com.simibubi.create.foundation.gui.widget.Label;
-import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.CreateLang;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.createmod.catnip.gui.AbstractSimiScreen;
+import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.platform.CatnipServices;
 import net.dantemc.create_maintenance_control.CreateMaintenance;
 import net.dantemc.create_maintenance_control.content.maintenance_box.MaintenanceBoxBlockEntity;
 import net.dantemc.create_maintenance_control.content.maintenance_box.MaintenanceRedstoneMode;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -24,7 +26,7 @@ import java.util.List;
 
 public class MaintenanceBoxScreen extends AbstractSimiScreen {
 
-    private final AllGuiTextures background = AllGuiTextures.DATA_GATHERER;
+    private final MaintenanceBoxGuiTexture background = MaintenanceBoxGuiTexture.MAINTENANCE_BOX_INTERFACE;
     private final MaintenanceBoxBlockEntity blockEntity;
 
     private IconButton confirmButton;
@@ -54,31 +56,32 @@ public class MaintenanceBoxScreen extends AbstractSimiScreen {
 
         // station filter textbox
         stationFilterLine = new ModularGuiLine();
-        new ModularGuiLineBuilder(font, stationFilterLine, x + 24, y + 28)
+        new ModularGuiLineBuilder(font, stationFilterLine, x + 24, y + 32)
                 .addTextInput(0, 160, (editBox, tooltip) -> {
                     editBox.setMaxLength(64);
-                    tooltip.withTooltip(List.of(
-                            Component.literal("Station Name Filter")
-                    ));
+                    tooltip.withTooltip(ImmutableList.of(Component.translatable("gui.maintenance_box.station_filter.tooltip")
+                                    .withStyle(s -> s.withColor(0x5391E1)),
+                            CreateLang.translateDirect("gui.schedule.lmb_edit")
+                                    .withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC)));
                 }, "StationFilter");
 
         // redstone mode selector
         redstoneModeLine = new ModularGuiLine();
-        new ModularGuiLineBuilder(font, redstoneModeLine, x + 24, y + 68)
+        new ModularGuiLineBuilder(font, redstoneModeLine, x + 24, y + 72)
                 .addSelectionScrollInput(0, 160, (input, label) -> {
                     input.forOptions(List.of(
-                            Component.literal("Unpowered = Maintenance"),
-                            Component.literal("Powered = Maintenance")
+                            Component.translatable("gui.maintenance_box.redstone_mode.default"),//Unpowered = Maintenance
+                            Component.translatable("gui.maintenance_box.redstone_mode.inverted") //Powered = Maintenance
                     ));
                 }, "RedstoneMode");
 
         // Skip downstream stations selector
         skipDownstreamLine = new ModularGuiLine();
-        new ModularGuiLineBuilder(font, skipDownstreamLine, x + 24, y + 108)
+        new ModularGuiLineBuilder(font, skipDownstreamLine, x + 24, y + 112)
                 .addSelectionScrollInput(0, 160, (input, label) -> {
                     input.forOptions(List.of(
-                            Component.literal("Disabled"),
-                            Component.literal("Enabled")
+                            Component.translatable("gui.maintenance_box.skip_downstream_stations.disabled"),
+                            Component.translatable("gui.maintenance_box.skip_downstream_stations.enabled")
                     ));
                 }, "SkipDownstream");
 
@@ -103,9 +106,22 @@ public class MaintenanceBoxScreen extends AbstractSimiScreen {
         MutableComponent header = Component.translatable("gui.maintenance_box.title");
         graphics.drawString(font, header, x + background.getWidth() / 2 - font.width(header) / 2, y + 4, 0x592424, false);
 
-        graphics.drawString(font, "Station Filter", guiLeft + 24, guiTop + 18, 0x575F7A, false);
-        graphics.drawString(font, "Redstone Mode", guiLeft + 24, guiTop + 58, 0x575F7A, false);
-        graphics.drawString(font, "Skip Downstream Stations", guiLeft + 24, guiTop + 98, 0x575F7A, false);
+        graphics.drawString(font, Component.translatable("gui.maintenance_box.station_filter"), guiLeft + 24, guiTop + 18, 0xB8B8B8, false);
+        graphics.drawString(font, Component.translatable("gui.maintenance_box.redstone_mode"), guiLeft + 24, guiTop + 58, 0xB8B8B8, false);
+        graphics.drawString(font, Component.translatable("gui.maintenance_box.skip_downstream_stations"), guiLeft + 24, guiTop + 98, 0xB8B8B8, false);
+
+        PoseStack ms = graphics.pose();
+        ms.pushPose();
+        TransformStack.of(ms)
+                .pushPose()
+                .translate(x + background.getWidth() + 4, y + background.getHeight() + 4, 100)
+                .scale(40)
+                .rotateXDegrees(-22)
+                .rotateYDegrees(63);
+        GuiGameElement.of(blockEntity.getBlockState()
+                        .setValue(DisplayLinkBlock.FACING, Direction.UP))
+                .render(graphics);
+        ms.popPose();
     }
 
     private void onConfirm() {
