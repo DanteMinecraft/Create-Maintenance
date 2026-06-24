@@ -1,5 +1,5 @@
 # 🛠️ Create: Maintenance Control
-![Modrinth](https://github.com/user-attachments/assets/ba69b03d-1f09-458c-9429-817854d7793a)
+<img width="400" height="auto" alt="Logotype" src="https://github.com/user-attachments/assets/d36733bf-ce03-44f9-9f24-142383bfb189" />
 
 Create: Maintenance Control is a small addon for Create that lets you temporarily disable Train Stations, making trains skip them without having to edit their train schedules manually.
 
