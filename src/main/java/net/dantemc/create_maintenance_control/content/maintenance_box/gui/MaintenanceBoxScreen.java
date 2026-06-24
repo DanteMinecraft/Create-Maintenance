@@ -89,8 +89,8 @@ public class MaintenanceBoxScreen extends AbstractSimiScreen {
 
         skipDownstreamSelector = (SelectionScrollInput) new SelectionScrollInput(x + 24, y + 110, 160, 18)
                 .forOptions(List.of(
-                        Component.translatable("gui.maintenance_box.skip_downstream_stations.disabled"),
-                        Component.translatable("gui.maintenance_box.skip_downstream_stations.enabled")
+                        Component.translatable("gui.maintenance_box.skip_downstream_stations.false"),
+                        Component.translatable("gui.maintenance_box.skip_downstream_stations.true")
                 ))
                 .writingTo(skipDownstreamLabel)
                 .titled(Component.translatable("gui.maintenance_box.skip_downstream_stations.tooltip"))
