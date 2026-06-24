@@ -78,14 +78,20 @@ public class OfflineStationManager {
         getData(level).removeEntry(boxPos);
     }
 
-    public static boolean isStationSkipped(Level level, GlobalStation station) {
+    public static MaintenanceEntry getMatchingEntry(Level level, GlobalStation station) {
         String stationName = station.name;
 
         for (MaintenanceEntry entry : getData(level).getEntries().values()) {
-            if (entry.shouldSkip() && Objects.equals(entry.stationFilter(), stationName)) {
-                return true;
-            }
+            if (!entry.shouldSkip())
+                continue;
+
+            if (Objects.equals(entry.stationFilter(), stationName))
+                return entry;
         }
-        return false;
+        return null;
+    }
+
+    public static boolean isStationSkipped(Level level, GlobalStation station) {
+        return getMatchingEntry(level, station) != null;
     }
 }

@@ -101,6 +101,7 @@ public class MaintenanceBoxScreen extends AbstractSimiScreen {
                 ))
                 .writingTo(skipDownstreamLabel)
                 .titled(Component.translatable("gui.maintenance_box.skip_downstream_stations.tooltip"))
+                .addHint(Component.translatable("gui.maintenance_box.skip_downstream_stations.explanation"))
                 .setState(blockEntity.shouldSkipDownstream() ? 1 : 0);
 
         addRenderableWidget(skipDownstreamSelector);

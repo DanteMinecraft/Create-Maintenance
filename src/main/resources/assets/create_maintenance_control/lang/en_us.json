@@ -16,6 +16,7 @@
   "gui.maintenance_box.redstone_mode.inverted": "Powered = Maintenance",
 
   "gui.maintenance_box.skip_downstream_stations.tooltip": "Skip downstream stations",
+  "gui.maintenance_box.skip_downstream_stations.explanation": "Note: When enabled, trains may skip downstream schedule entries until a reachable station is found.",
   "gui.maintenance_box.skip_downstream_stations.false": "Off",
   "gui.maintenance_box.skip_downstream_stations.true": "On",
 
