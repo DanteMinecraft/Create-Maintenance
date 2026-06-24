@@ -5,7 +5,10 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import net.createmod.catnip.gui.AbstractSimiScreen;
+import net.createmod.catnip.platform.CatnipServices;
+import net.dantemc.create_maintenance_control.CreateMaintenance;
 import net.dantemc.create_maintenance_control.content.maintenance_box.MaintenanceBoxBlockEntity;
+import net.dantemc.create_maintenance_control.content.maintenance_box.MaintenanceRedstoneMode;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
@@ -33,9 +36,8 @@ public class MaintenanceBoxScreen extends AbstractSimiScreen {
         int x = guiLeft;
         int y = guiTop;
 
-        // placeholders
-        String stationFilter = "";
-        int redstoneModeIndex = 0;
+        String stationFilter = blockEntity.getStationFilter();
+        int redstoneModeIndex = blockEntity.getRedstoneMode().ordinal();
 
         // station filter textbox
         stationFilterBox = new EditBox(font, x + 24, y + 28, 120, 18, Component.literal("Station Filter"));
@@ -68,6 +70,20 @@ public class MaintenanceBoxScreen extends AbstractSimiScreen {
     }
 
     private void onConfirm() {
+
+        String stationFilter = stationFilterBox.getValue().trim();
+
+        MaintenanceRedstoneMode redstoneMode = MaintenanceRedstoneMode.values()[redstoneModeSelector.getState()];
+
+        boolean skipDownstream = false; // temporary until widget exist
+
+        CatnipServices.NETWORK.sendToServer(new MaintenanceBoxConfigurationPacket(blockEntity.getBlockPos(), stationFilter,
+                redstoneMode));
+
+        CreateMaintenance.debug("Station filter: " + stationFilter);
+        CreateMaintenance.debug("Redstone mode: " + redstoneMode);
+        CreateMaintenance.debug("Skip downstream: " + skipDownstream);
+
         onClose();
     }
 }

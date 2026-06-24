@@ -28,18 +28,35 @@ public class OfflineStationManager {
         getData(level).setEntry(boxPos, entry);
     }
 
-    public static void refreshBox(Level level, BlockPos boxPos, String defaultStationFilter, boolean powered) {
+    public static MaintenanceEntry ensureBoxEntry(Level level, BlockPos boxPos, String defaultStationFilter) {
         MaintenanceEntry entry = getEntry(level, boxPos);
 
         if (entry == null) {
-            entry = new MaintenanceEntry(defaultStationFilter,
-                    false, MaintenanceRedstoneMode.UNPOWERED_ACTIVE, false
+            entry = new MaintenanceEntry(
+                    defaultStationFilter,
+                    true, // shouldSkip is recalculated immediately by refreshBox so value here doesn't really matter
+                    MaintenanceRedstoneMode.UNPOWERED_ACTIVE,
+                    false
             );
+            setEntry(level, boxPos, entry);
         }
+
+        return entry;
+    }
+
+    public static void refreshBox(Level level, BlockPos boxPos, boolean powered) {
+        MaintenanceEntry entry = getEntry(level, boxPos);
+        if (entry == null)
+            return;
 
         boolean shouldSkip = entry.redstoneMode().isMaintenanceActive(powered);
 
-        MaintenanceEntry updated = new MaintenanceEntry(entry.stationFilter(), shouldSkip, entry.redstoneMode(), entry.skipDownstream());
+        MaintenanceEntry updated = new MaintenanceEntry(
+                entry.stationFilter(),
+                shouldSkip,
+                entry.redstoneMode(),
+                entry.skipDownstream()
+        );
 
         setEntry(level, boxPos, updated);
     }

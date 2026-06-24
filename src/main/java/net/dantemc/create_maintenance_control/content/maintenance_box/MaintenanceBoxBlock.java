@@ -38,6 +38,14 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
         registerDefaultState(defaultBlockState().setValue(POWERED, false));
     }
 
+    private void refreshAttachedStationBox(Level level, BlockPos pos, boolean powered) {
+        GlobalStation station = StationUtils.findNearbyStation(level, pos);
+        if (station == null)
+            return;
+
+        OfflineStationManager.refreshBox(level, pos, powered);
+    }
+
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(POWERED);
@@ -57,10 +65,7 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
 
         level.setBlock(pos, state.setValue(POWERED, powered), Block.UPDATE_ALL);
 
-        GlobalStation station = StationUtils.findNearbyStation(level, pos);
-        if (station == null)
-            return;
-        OfflineStationManager.refreshBox(level, pos, station.name, powered);
+        refreshAttachedStationBox(level, pos, powered);
     }
 
     @Override
@@ -80,10 +85,7 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
             level.setBlock(pos, state, Block.UPDATE_ALL);
         }
 
-        GlobalStation station = StationUtils.findNearbyStation(level, pos);
-        if (station == null)
-            return;
-        OfflineStationManager.refreshBox(level, pos, station.name, powered);
+        refreshAttachedStationBox(level, pos, powered);
     }
 
     @Override
