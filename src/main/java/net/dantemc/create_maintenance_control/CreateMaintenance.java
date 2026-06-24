@@ -9,6 +9,7 @@ import net.createmod.catnip.lang.FontHelper;
 import net.dantemc.create_maintenance_control.content.maintenance_box.MaintenanceBoxBlock;
 import net.dantemc.create_maintenance_control.content.maintenance_box.MaintenanceBoxBlockEntity;
 import net.dantemc.create_maintenance_control.foundation.IgnorePlacingRulesItem;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraftforge.common.MinecraftForge;
@@ -57,9 +58,15 @@ public class CreateMaintenance {
 
         REGISTRATE.registerEventListeners(modEventBus);
 
+        ModPackets.register();
+
         MinecraftForge.EVENT_BUS.register(this);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+    }
+
+    public static ResourceLocation asResource(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MODID, path);
     }
 
     //helper method for loggers

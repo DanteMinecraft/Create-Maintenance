@@ -1,9 +1,11 @@
 package net.dantemc.create_maintenance_control.railway;
 
+import net.dantemc.create_maintenance_control.content.maintenance_box.MaintenanceRedstoneMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 
 import java.util.HashMap;
@@ -19,18 +21,26 @@ public class MaintenanceSavedData extends SavedData {
         return DATA_NAME;
     }
 
-    public void setEntry(BlockPos boxPos, MaintenanceEntry entry){
+    public void setEntry(BlockPos boxPos, MaintenanceEntry entry) {
         entries.put(boxPos, entry);
         setDirty();
     }
 
-    public void removeEntry(BlockPos boxPos){
+    public void removeEntry(BlockPos boxPos) {
         entries.remove(boxPos);
         setDirty();
     }
 
     public Map<BlockPos, MaintenanceEntry> getEntries() {
         return entries;
+    }
+
+    public static MaintenanceSavedData get(ServerLevel level) {
+        return level.getDataStorage().computeIfAbsent(
+                MaintenanceSavedData::load,
+                MaintenanceSavedData::new,
+                DATA_NAME
+        );
     }
 
     public static MaintenanceSavedData load(CompoundTag tag) {
@@ -50,9 +60,25 @@ public class MaintenanceSavedData extends SavedData {
             String stationFilter = entryTag.getString("StationFilter");
             boolean shouldSkip = entryTag.getBoolean("ShouldSkip");
 
-            MaintenanceEntry entry = new MaintenanceEntry(stationFilter, shouldSkip);
+            MaintenanceRedstoneMode redstoneMode;
+            try {
+                redstoneMode = MaintenanceRedstoneMode.valueOf(entryTag.getString("RedstoneMode"));
+            } catch (IllegalArgumentException e) {
+                redstoneMode = MaintenanceRedstoneMode.UNPOWERED_ACTIVE;
+            }
+
+            boolean skipDownstream = entryTag.getBoolean("SkipDownstream");
+
+            MaintenanceEntry entry = new MaintenanceEntry(
+                    stationFilter,
+                    shouldSkip,
+                    redstoneMode,
+                    skipDownstream
+            );
+
             data.entries.put(boxPos, entry);
         }
+
         return data;
     }
 
@@ -60,8 +86,9 @@ public class MaintenanceSavedData extends SavedData {
     public CompoundTag save(CompoundTag tag) {
         ListTag entryList = new ListTag();
 
-        for (BlockPos boxPos : entries.keySet()) {
-            MaintenanceEntry entry = entries.get(boxPos);
+        for (Map.Entry<BlockPos, MaintenanceEntry> mapEntry : entries.entrySet()) {
+            BlockPos boxPos = mapEntry.getKey();
+            MaintenanceEntry entry = mapEntry.getValue();
 
             CompoundTag entryTag = new CompoundTag();
 
@@ -71,6 +98,8 @@ public class MaintenanceSavedData extends SavedData {
 
             entryTag.putString("StationFilter", entry.stationFilter());
             entryTag.putBoolean("ShouldSkip", entry.shouldSkip());
+            entryTag.putString("RedstoneMode", entry.redstoneMode().name());
+            entryTag.putBoolean("SkipDownstream", entry.skipDownstream());
 
             entryList.add(entryTag);
         }
