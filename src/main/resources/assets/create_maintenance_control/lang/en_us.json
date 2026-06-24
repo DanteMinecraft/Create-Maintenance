@@ -9,14 +9,13 @@
   "block.create_maintenance_control.maintenance_box.tooltip.behaviour2": "When powered, maintenance is _temporarily disabled_ and trains will _stop at the station_ as usual.",
 
   "gui.maintenance_box.title": "Maintenance Box",
-  "gui.maintenance_box.station_filter": "Station Name Filter",
-  "gui.maintenance_box.station_filter.tooltip": "Apply maintenance to the station with this exact name",
+  "gui.maintenance_box.station_filter.tooltip": "Station name filter",
 
-  "gui.maintenance_box.redstone_mode": "Redstone Mode",
+  "gui.maintenance_box.redstone_mode.tooltip": "Redstone mode",
   "gui.maintenance_box.redstone_mode.default": "Unpowered = Maintenance",
   "gui.maintenance_box.redstone_mode.inverted": "Powered = Maintenance",
 
-  "gui.maintenance_box.skip_downstream_stations": "Skip Downstream Stations",
+  "gui.maintenance_box.skip_downstream_stations.tooltip": "Skip downstream stations",
   "gui.maintenance_box.skip_downstream_stations.disabled": "Disabled",
   "gui.maintenance_box.skip_downstream_stations.enabled": "Enabled",
 
