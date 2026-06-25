@@ -48,12 +48,7 @@ This includes initial testing with:
 - Steam 'n' Rails
 
 ## 📌 Planned
-
-### Maintenance Box GUI
-Planned options include:
-  - a station name filter field
-  - a redstone behavior toggle (powered = maintenance / unpowered = maintenance)
-  - a "__Skip unreachable downstream stations__" toggle for more advanced network layouts
+See [Roadmap](https://github.com/DanteMinecraft/Create-Maintenance/wiki/Roadmap)
 
 ### Documentation / Usability
 - a Ponder scene for the Maintenance Box
