@@ -34,10 +34,6 @@ While maintenance is active:
 - The mod currently focuses on skipping maintenance-marked stations rather than rerouting trains to alternative destinations. More advanced routing behaviour may be explored in future updates.
 - Best results are achieved on networks where trains can still pathfind from the previous stop to the next one.
 
-## ⚠️ Known issues
-- Maintenance Boxes do not always behave correctly in unloaded chunks.
-  - This is tagged as a high-priority issue and will be addressed before any major new features are added.
-
 ## 🤝 Compatibility
 The mod has been tested in larger Create-based modpacks and appears to work fine alongside many common Create addons.
 
