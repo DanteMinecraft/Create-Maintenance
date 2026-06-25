@@ -8,6 +8,18 @@
   "block.create_maintenance_control.maintenance_box.tooltip.behaviour1": "Tåg som har denna station _i sina scheman_ kommer att _hoppa över den_ medan underhållet pågår.",
   "block.create_maintenance_control.maintenance_box.tooltip.behaviour2": "När blocket _får en redstonesignal_ kommer tåg att _stanna vid stationen_ som vanligt.",
 
+  "gui.maintenance_box.title": "Underhållsblock",
+  "gui.maintenance_box.station_filter.tooltip": "Stationsfilter",
+
+  "gui.maintenance_box.redstone_mode.tooltip": "Redstone-läge",
+  "gui.maintenance_box.redstone_mode.default": "Odriven = Underhåll",
+  "gui.maintenance_box.redstone_mode.inverted": "Driven = Underhåll",
+
+  "gui.maintenance_box.skip_downstream_stations.tooltip": "Hoppa över efterföljande stationer",
+  "gui.maintenance_box.skip_downstream_stations.explanation": "Obs: När detta är aktiverat kan tåg hoppa över efterföljande schemaposter tills en nåbar station hittas.",
+  "gui.maintenance_box.skip_downstream_stations.false": "Av",
+  "gui.maintenance_box.skip_downstream_stations.true": "På",
+
   "create_maintenance_control.configuration.title": "Create: Maintenance Control-konfigurationer",
   "create_maintenance_control.configuration.section.create_maintenance_control.common.toml": "Create: Maintenance Control-konfigurationer",
   "create_maintenance_control.configuration.section.create_maintenance_control.common.toml.title": "Create: Maintenance Control-konfigurationer",

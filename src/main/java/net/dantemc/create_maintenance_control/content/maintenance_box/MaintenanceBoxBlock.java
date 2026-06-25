@@ -1,14 +1,18 @@
 package net.dantemc.create_maintenance_control.content.maintenance_box;
-
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
+import net.createmod.catnip.gui.ScreenOpener;
 import net.dantemc.create_maintenance_control.CreateMaintenance;
+import net.dantemc.create_maintenance_control.content.maintenance_box.gui.MaintenanceBoxScreen;
 import net.dantemc.create_maintenance_control.foundation.CreateMaintenanceShapes;
 import net.dantemc.create_maintenance_control.railway.OfflineStationManager;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -19,8 +23,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements IBE<MaintenanceBoxBlockEntity> {
 
@@ -29,6 +36,14 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
     public MaintenanceBoxBlock(Properties properties) {
         super(properties);
         registerDefaultState(defaultBlockState().setValue(POWERED, false));
+    }
+
+    private void refreshAttachedStationBox(Level level, BlockPos pos, boolean powered, boolean skipDownstream) {
+        GlobalStation station = StationUtils.findNearbyStation(level, pos);
+        if (station == null)
+            return;
+
+        OfflineStationManager.refreshBox(level, pos, powered, skipDownstream);
     }
 
     @Override
@@ -50,10 +65,7 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
 
         level.setBlock(pos, state.setValue(POWERED, powered), Block.UPDATE_ALL);
 
-        GlobalStation station = StationUtils.findNearbyStation(level, pos);
-        if (station == null)
-            return;
-        OfflineStationManager.registerBox(level, pos, station.name, !powered);
+        refreshAttachedStationBox(level, pos, powered, false);
     }
 
     @Override
@@ -73,10 +85,7 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
             level.setBlock(pos, state, Block.UPDATE_ALL);
         }
 
-        GlobalStation station = StationUtils.findNearbyStation(level, pos);
-        if (station == null)
-            return;
-        OfflineStationManager.registerBox(level, pos, station.name, !powered);
+        refreshAttachedStationBox(level, pos, powered, false);
     }
 
     @Override
@@ -92,6 +101,13 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
         CreateMaintenance.debug("Maintenance Box removed");
 
         OfflineStationManager.unregisterBox(level, pos);
+    }
+
+    @OnlyIn(value = Dist.CLIENT)
+    protected void displayScreen(MaintenanceBoxBlockEntity be, Player player) {
+        if (!(player instanceof LocalPlayer))
+            return;
+        ScreenOpener.open(new MaintenanceBoxScreen(be));
     }
 
     @Override
@@ -113,6 +129,15 @@ public class MaintenanceBoxBlock extends WrenchableDirectionalBlock implements I
     @Override
     public VoxelShape getShape(BlockState State, BlockGetter Level, BlockPos Pos, CollisionContext Context) {
         return CreateMaintenanceShapes.MAINTENANCE_BOX.get(State.getValue(FACING));
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (level.isClientSide) {
+            withBlockEntityDo(level, pos, be -> displayScreen(be, player));
+        }
+
+        return InteractionResult.SUCCESS;
     }
 
     @Override
